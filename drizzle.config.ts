@@ -8,5 +8,5 @@ export default {
   dbCredentials: {
     url: env.DATABASE_URL,
   },
-  tablesFilter: ["troney-t3_*"],
+  tablesFilter: ["*"],
 } satisfies Config;

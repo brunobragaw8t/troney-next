@@ -16,10 +16,10 @@ import {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = mysqlTableCreator((name) => `troney-t3_${name}`);
+export const createTable = mysqlTableCreator((name) => name);
 
 export const posts = createTable(
-  "post",
+  "posts",
   {
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
     name: varchar("name", { length: 256 }),
