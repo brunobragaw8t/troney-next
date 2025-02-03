@@ -1,29 +1,29 @@
-# Create T3 App
+# Troney
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Troney (word-play for tracking money) is an expense tracker web app focused on a
+simple and fast UI to keep my life on track.
 
-## What's next? How do I make an app with this?
+Some of its features are:
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- Record earnings, expenses and movements;
+- Separate money by wallets;
+- Organize expenses with buckets and categories;
+- Monthly graphs;
+- Keyboard shortcuts for navigating the UI.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## ToDo and milestones
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- [ ] Create auth landing
+- [ ] Create user registration
+- [ ] Create user activation
+- [ ] Create route to resend activation email
+- [ ] Create user login by issuing a JWT
+- [ ] Create password recovery functionality
+- [ ] Send email when user password changes
+- [ ] Implement refresh token functionality
+- [ ] Create wallets CRUD
+- [ ] Create buckets CRUD
+- [ ] Create categories CRUD
+- [ ] Create earnings CRUD
+- [ ] Create expenses CRUD
+- [ ] Create movements CRUD
