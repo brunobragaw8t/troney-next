@@ -13,7 +13,7 @@ Some of its features are:
 
 ## ToDo and milestones
 
-- [ ] Create auth landing
+- [x] Create auth landing
 - [ ] Create user registration
 - [ ] Create user activation
 - [ ] Create route to resend activation email
