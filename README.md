@@ -1,5 +1,7 @@
 # Troney
 
+Reworking this in Next.js. Original project [made with Nuxt](https://github.com/brunobragaw8t/troney).
+
 Troney (word-play for tracking money) is an expense tracker web app focused on a
 simple and fast UI to keep my life on track.
 
