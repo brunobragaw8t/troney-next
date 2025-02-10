@@ -16,7 +16,7 @@ Some of its features are:
 ## ToDo and milestones
 
 - [x] Create auth landing
-- [ ] Create user registration
+- [x] Create user registration
 - [ ] Create user activation
 - [ ] Create route to resend activation email
 - [ ] Create user login by issuing a JWT
