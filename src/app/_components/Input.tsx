@@ -9,9 +9,12 @@ type InputProps = {
   icon?: React.ReactNode;
   type: "text" | "email" | "password";
   name: string;
+  value: string;
+  setter: (newValue: string) => void;
   placeholder?: string;
   autoFocus?: boolean;
   toggleType?: boolean;
+  error?: string | string[];
 };
 
 export default function Input(props: InputProps) {
@@ -48,8 +51,10 @@ export default function Input(props: InputProps) {
           id={id}
           type={displayAsText ? "text" : props.type}
           name={props.name}
+          value={props.value}
+          onInput={(e) => props.setter(e.currentTarget.value)}
           placeholder={props.placeholder}
-          className={`bg-secondary-3 placeholder-secondary-4 w-full rounded-lg border border-transparent py-2 outline-none ${props.icon ? "pl-10" : "pl-3"} ${props.toggleType ? "pr-10" : "pr-3"} text-white focus:border-white`}
+          className={`w-full rounded-lg border border-transparent bg-secondary-3 py-2 placeholder-secondary-4 outline-none ${props.icon ? "pl-10" : "pl-3"} ${props.toggleType ? "pr-10" : "pr-3"} text-white focus:border-white`}
         />
 
         {props.toggleType ? (
@@ -62,6 +67,18 @@ export default function Input(props: InputProps) {
           </button>
         ) : null}
       </div>
+
+      {props.error ? (
+        <p className="mt-1 text-xs text-red-400">
+          {Array.isArray(props.error)
+            ? props.error.map((e) => (
+                <span className="block" key={e}>
+                  {e}
+                </span>
+              ))
+            : props.error}
+        </p>
+      ) : null}
     </div>
   );
 }
