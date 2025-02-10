@@ -13,6 +13,8 @@ Some of its features are:
 - Monthly graphs;
 - Keyboard shortcuts for navigating the UI.
 
+Here's a [demo](https://troney-next.netlify.app/).
+
 ## ToDo and milestones
 
 - [x] Create auth landing
