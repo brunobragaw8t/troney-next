@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 import * as nodemailer from "nodemailer";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { activationTokens, users } from "~/server/db/schema";
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { env } from "~/env";
 
@@ -127,5 +127,40 @@ export const usersRouter = createTRPCRouter({
           <br />
           <a href="${activationLink}" target="_blank">${activationLink}</a>`,
       });
+    }),
+
+  activate: publicProcedure
+    .input(z.string().uuid())
+    .mutation(async ({ ctx, input }) => {
+      const selectActivationTokensResult = await ctx.db
+        .select()
+        .from(activationTokens)
+        .where(sql`value=${input}`)
+        .leftJoin(users, eq(users.id, activationTokens.userId));
+
+      const activationToken = selectActivationTokensResult[0];
+
+      if (!activationToken || !activationToken.users) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Activation token not found.",
+        });
+      }
+
+      const [updateUserResult] = await ctx.db
+        .update(users)
+        .set({ activatedAt: sql`NOW()` })
+        .where(sql`id=${activationToken.users.id}`);
+
+      if (updateUserResult.affectedRows === 0) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Could not activate user",
+        });
+      }
+
+      await ctx.db
+        .delete(activationTokens)
+        .where(sql`id=${activationToken.activation_tokens.id}`);
     }),
 });

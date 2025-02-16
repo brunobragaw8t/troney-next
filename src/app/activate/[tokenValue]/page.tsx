@@ -1,5 +1,6 @@
-import Alert from "~/app/_components/Alert";
-import { api } from "~/trpc/server";
+import { Suspense } from "react";
+import IconLoader from "~/app/_components/icons/IconLoader";
+import UserActivation from "~/app/_components/UserActivation";
 
 type Props = {
   params: Promise<{
@@ -10,21 +11,15 @@ type Props = {
 export default async function Activate(props: Props) {
   const tokenValue = (await props.params).tokenValue;
 
-  try {
-    await api.activationTokens.getItem(tokenValue);
-  } catch {
-    return (
-      <Alert
-        type="error"
-        message="Your activation token is invalid or has expired."
-      />
-    );
-  }
-
   return (
-    <Alert
-      type="success"
-      message="Your account has been activated successfully!"
-    />
+    <Suspense
+      fallback={
+        <div className="flex justify-center">
+          <IconLoader className="h-6 w-6 text-white" />
+        </div>
+      }
+    >
+      <UserActivation tokenValue={tokenValue} />
+    </Suspense>
   );
 }
