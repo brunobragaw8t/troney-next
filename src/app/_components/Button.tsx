@@ -1,15 +1,37 @@
+import Link from "next/link";
+
+type Props = {
+  label: string;
+  className?: string;
+} & (ButtonProps | LinkProps);
+
 type ButtonProps = {
   type: "button" | "submit";
-  label: string;
   loading?: boolean;
 };
 
-export default function Button(props: ButtonProps) {
+type LinkProps = {
+  type: "link";
+  href: string;
+  target?: "_self" | "_blank";
+};
+
+export default function Button(props: Props) {
+  const className = `${props.className} rounded-lg border border-transparent bg-primary-1 p-2 text-center text-secondary-1 outline-none hover:bg-primary-2 focus:border-white`;
+
+  if (props.type === "link") {
+    return (
+      <Link href={props.href} target={props.target} className={className}>
+        {props.label}
+      </Link>
+    );
+  }
+
   return (
     <button
       type={props.type}
-      className={`text-secondary-1 hover:bg-primary-2 bg-primary-1 rounded-lg border border-transparent p-2 outline-none focus:border-white ${props.loading ? "cursor-wait opacity-50" : ""}`}
       disabled={props.loading}
+      className={`${className} ${props.loading ? "cursor-wait opacity-50" : ""}`}
     >
       {props.label}
     </button>
