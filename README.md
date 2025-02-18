@@ -19,7 +19,7 @@ Here's a [demo](https://troney-next.netlify.app/).
 
 - [x] Create auth landing
 - [x] Create user registration
-- [ ] Create user activation
+- [x] Create user activation
 - [ ] Create route to resend activation email
 - [ ] Create user login by issuing a JWT
 - [ ] Create password recovery functionality
