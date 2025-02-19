@@ -3,6 +3,7 @@ import Link from "next/link";
 type Props = {
   label: string;
   className?: string;
+  variant?: "primary" | "outline";
 } & (ButtonProps | LinkProps);
 
 type ButtonProps = {
@@ -17,7 +18,18 @@ type LinkProps = {
 };
 
 export default function Button(props: Props) {
-  const className = `${props.className} rounded-lg border border-transparent bg-primary-1 p-2 text-center text-secondary-1 outline-none hover:bg-primary-2 focus:border-white`;
+  let className = `${props.className || ""} rounded-lg border p-2 text-center outline-none focus:border-white `;
+
+  switch (props.variant) {
+    case "outline":
+      className +=
+        "border-primary-1 bg-transparent text-primary-1 hover:border-primary-2 hover:text-primary-2";
+      break;
+
+    default:
+      className +=
+        "border-transparent bg-primary-1 text-secondary-1 hover:bg-primary-2";
+  }
 
   if (props.type === "link") {
     return (
