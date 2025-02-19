@@ -31,3 +31,12 @@ Here's a [demo](https://troney-next.netlify.app/).
 - [ ] Create earnings CRUD
 - [ ] Create expenses CRUD
 - [ ] Create movements CRUD
+
+## Technologies
+
+- [React](https://react.dev/) & [Next.js](https://nextjs.org/)
+- [tRPC](https://trpc.io/)
+- [Zod](https://zod.dev/)
+- [MySQL](https://www.mysql.com/) & [Drizzle ORM](https://orm.drizzle.team/)
+- [Nodemailer](https://www.nodemailer.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
