@@ -18,14 +18,25 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
 
+  const [userEmailForActivation, setUserEmailForActivation] = useState("");
+  const [displayResendActivationEmail, setDisplayResendActivationEmail] =
+    useState(false);
+
   const registerMutation = api.users.register.useMutation({
     onSuccess() {
       setName("");
       setEmail("");
       setPassword("");
       setRepassword("");
+
+      setTimeout(() => {
+        setDisplayResendActivationEmail(true);
+      }, 30000);
     },
   });
+
+  const resendActivationEmailMutation =
+    api.users.resendActivationEmail.useMutation({});
 
   async function handleForm(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -44,6 +55,12 @@ export default function Home() {
       case "recover":
       // recover
     }
+  }
+
+  async function handleResendActivationEmail(email: string): Promise<void> {
+    try {
+      resendActivationEmailMutation.mutate(email);
+    } catch {}
   }
 
   return (
@@ -129,7 +146,10 @@ export default function Home() {
             type="email"
             name="email"
             value={email}
-            setter={setEmail}
+            setter={(email) => {
+              setEmail(email);
+              setUserEmailForActivation(email);
+            }}
             placeholder="Enter your email"
             icon={<IconEmail />}
             label="Email"
@@ -162,12 +182,6 @@ export default function Home() {
             }
           />
 
-          <Button
-            loading={registerMutation.isPending}
-            type="submit"
-            label="Register"
-          />
-
           {registerMutation.isError ? (
             <Alert
               type="error"
@@ -182,9 +196,45 @@ export default function Home() {
           {registerMutation.isSuccess ? (
             <Alert
               type="success"
-              message="Your have been successfully registered! Please check your email to activate your account."
+              message="You have been successfully registered! Please check your email to activate your account."
             />
           ) : null}
+
+          {resendActivationEmailMutation.isError ? (
+            <Alert
+              type="error"
+              message={
+                resendActivationEmailMutation.error.data?.zodError
+                  ? "There are errors that need your attention."
+                  : resendActivationEmailMutation.error.message
+              }
+            />
+          ) : null}
+
+          {resendActivationEmailMutation.isSuccess ? (
+            <Alert
+              type="success"
+              message="Activation email successfully sent! Please check your email to activate your account."
+            />
+          ) : null}
+
+          {displayResendActivationEmail ? (
+            <Button
+              type="button"
+              variant="outline"
+              label="Resend activation email"
+              callback={() =>
+                handleResendActivationEmail(userEmailForActivation)
+              }
+              loading={resendActivationEmailMutation.isPending}
+            />
+          ) : null}
+
+          <Button
+            loading={registerMutation.isPending}
+            type="submit"
+            label="Register"
+          />
 
           <p className="text-center text-sm font-medium text-secondary-4">
             Already have an account?{" "}

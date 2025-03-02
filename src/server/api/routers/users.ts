@@ -129,6 +129,75 @@ export const usersRouter = createTRPCRouter({
       });
     }),
 
+  resendActivationEmail: publicProcedure
+    .input(z.string().email())
+    .mutation(async ({ ctx, input }) => {
+      const selectUserByEmailResult = await ctx.db
+        .select()
+        .from(users)
+        .where(sql`email=${input}`)
+        .leftJoin(activationTokens, eq(activationTokens.userId, users.id));
+
+      const res = selectUserByEmailResult[0];
+
+      if (!res) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const { users: user, activation_tokens: activationToken } = res;
+
+      if (user.activatedAt !== null) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "User already activated.",
+        });
+      }
+
+      if (!activationToken) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Unexpected error",
+        });
+      }
+
+      if (activationToken.resentAt !== null) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Activation email already resent.",
+        });
+      }
+
+      const transport = nodemailer.createTransport({
+        host: env.SMTP_HOST,
+        port: Number(env.SMTP_PORT),
+        secure: "true" === env.SMTP_SECURE,
+        auth: {
+          user: env.SMTP_AUTH_USER,
+          pass: env.SMTP_AUTH_PASS,
+        },
+      });
+
+      const activationLink = `${env.APP_URL}/activate/${activationToken.value}`;
+
+      await transport.sendMail({
+        from: `"${env.SMTP_FROM_NAME}" <${env.SMTP_FROM_EMAIL}>`,
+        to: user.email,
+        subject: "Troney | Activate your account",
+        html: `Hi, ${user.name}.<br />
+          Your account was successfully created. Please click the following link to active it:<br />
+          <br />
+          <a href="${activationLink}" target="_blank">${activationLink}</a>`,
+      });
+
+      await ctx.db
+        .update(activationTokens)
+        .set({ resentAt: sql`NOW()` })
+        .where(sql`id=${activationToken.id}`);
+    }),
+
   activate: publicProcedure
     .input(z.string().uuid())
     .mutation(async ({ ctx, input }) => {

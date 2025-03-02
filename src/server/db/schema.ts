@@ -20,6 +20,7 @@ export const activationTokens = mysqlTable("activation_tokens", {
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
   value: varchar("value", { length: 36 }).$defaultFn(randomUUID),
+  resentAt: timestamp("resent_at").default(sql`NULL`),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
