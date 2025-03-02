@@ -8,6 +8,7 @@ type Props = {
 
 type ButtonProps = {
   type: "button" | "submit";
+  callback?: () => void;
   loading?: boolean;
 };
 
@@ -44,6 +45,7 @@ export default function Button(props: Props) {
       type={props.type}
       disabled={props.loading}
       className={`${className} ${props.loading ? "cursor-wait opacity-50" : ""}`}
+      onClick={props.callback}
     >
       {props.label}
     </button>
