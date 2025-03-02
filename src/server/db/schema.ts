@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 export const users = mysqlTable("users", {
   id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
   name: varchar("name", { length: 256 }),
-  email: varchar("email", { length: 256 }).notNull(),
+  email: varchar("email", { length: 256 }).notNull().unique(),
   password: varchar("password", { length: 256 }),
   activatedAt: timestamp("activated_at").default(sql`NULL`),
   createdAt: timestamp("created_at")
