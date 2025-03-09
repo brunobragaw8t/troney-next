@@ -6,6 +6,7 @@ import { activationTokens, users } from "~/server/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { env } from "~/env";
+import jwt from "jsonwebtoken";
 
 const passwordSchema = z
   .string()
@@ -127,6 +128,41 @@ export const usersRouter = createTRPCRouter({
           <br />
           <a href="${activationLink}" target="_blank">${activationLink}</a>`,
       });
+    }),
+
+  login: publicProcedure
+    .input(
+      z.object({
+        email: z.string().max(256).email(),
+        password: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const selectUserByEmailResult = await ctx.db
+        .select()
+        .from(users)
+        .where(sql`email=${input.email}`);
+
+      const user = selectUserByEmailResult[0];
+
+      if (!user || !bcrypt.compareSync(input.password, user.password)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Incorrect email and/or password.",
+        });
+      }
+
+      const token = jwt.sign(
+        {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+        env.JWT_SECRET,
+        { expiresIn: "1h" },
+      );
+
+      return { token };
     }),
 
   resendActivationEmail: publicProcedure

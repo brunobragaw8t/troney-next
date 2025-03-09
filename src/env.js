@@ -8,6 +8,7 @@ export const env = createEnv({
    */
   server: {
     APP_URL: z.string().url(),
+    JWT_SECRET: z.string().base64().length(32),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -36,6 +37,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     APP_URL: process.env.APP_URL,
+    JWT_SECRET: process.env.JWT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     SMTP_HOST: process.env.SMTP_HOST,
