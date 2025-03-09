@@ -6,7 +6,7 @@ export const users = mysqlTable("users", {
   id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
   name: varchar("name", { length: 256 }),
   email: varchar("email", { length: 256 }).notNull().unique(),
-  password: varchar("password", { length: 256 }),
+  password: varchar("password", { length: 256 }).notNull(),
   activatedAt: timestamp("activated_at").default(sql`NULL`),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
