@@ -1,280 +1,103 @@
-"use client";
-
-import { type FormEvent, useState } from "react";
-import { api } from "~/trpc/react";
-import Input from "./_components/Input";
-import IconEmail from "./_components/icons/IconEmail";
-import IconPassword from "./_components/icons/IconPassword";
-import Button from "./_components/Button";
-import IconUser from "./_components/icons/IconUser";
-import Alert from "./_components/Alert";
+import Image from "next/image";
 
 export default function Home() {
-  const [form, setForm] = useState<"login" | "register" | "recover">("login");
-  const [loading] = useState(false);
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repassword, setRepassword] = useState("");
-
-  const [userEmailForActivation, setUserEmailForActivation] = useState("");
-  const [displayResendActivationEmail, setDisplayResendActivationEmail] =
-    useState(false);
-
-  const registerMutation = api.users.register.useMutation({
-    onSuccess() {
-      setName("");
-      setEmail("");
-      setPassword("");
-      setRepassword("");
-
-      setTimeout(() => {
-        setDisplayResendActivationEmail(true);
-      }, 30000);
-    },
-  });
-
-  const resendActivationEmailMutation =
-    api.users.resendActivationEmail.useMutation({});
-
-  async function handleForm(event: FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault();
-
-    switch (form) {
-      case "login":
-        // login
-        break;
-
-      case "register":
-        try {
-          registerMutation.mutate({ name, email, password, repassword });
-        } catch {}
-        break;
-
-      case "recover":
-      // recover
-    }
-  }
-
-  async function handleResendActivationEmail(email: string): Promise<void> {
-    try {
-      resendActivationEmailMutation.mutate(email);
-    } catch {}
-  }
-
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleForm}>
-      {form === "login" ? (
-        <>
-          <Input
-            type="email"
-            name="email"
-            value={email}
-            setter={setEmail}
-            placeholder="Enter your email"
-            icon={<IconEmail />}
-            label="Email"
-            autoFocus={true}
-          />
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <Image
+          className="dark:invert"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={180}
+          height={38}
+          priority
+        />
+        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+          <li className="mb-2 tracking-[-.01em]">
+            Get started by editing{" "}
+            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
+              src/app/page.tsx
+            </code>
+            .
+          </li>
+          <li className="tracking-[-.01em]">
+            Save and see your changes instantly.
+          </li>
+        </ol>
 
-          <Input
-            type="password"
-            name="password"
-            value={password}
-            setter={setPassword}
-            placeholder="Enter your password"
-            icon={<IconPassword />}
-            label="Password"
-            toggleType={true}
-          />
-
-          <div className="flex justify-between">
-            <div>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="remember"
-                  className="relative h-3 w-3 appearance-none rounded-sm border outline-none after:absolute after:bottom-1/2 after:right-1/2 after:translate-x-1/2 after:translate-y-1/2 after:text-xs after:text-white after:opacity-0 after:content-['✓'] checked:border-primary-1 checked:bg-primary-1 checked:after:opacity-100 focus:ring-1 focus:ring-white"
-                />
-
-                <span className="text-sm font-medium text-secondary-4">
-                  Remember me
-                </span>
-              </label>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setForm("recover")}
-              className="rounded border border-transparent text-sm font-medium text-primary-1 outline-none hover:text-primary-2 focus:border-white"
-            >
-              Forgot password?
-            </button>
-          </div>
-
-          <Button loading={loading} type="submit" label="Login" />
-
-          <p className="text-center text-sm font-medium text-secondary-4">
-            Don't have an account?{" "}
-            <button
-              type="button"
-              className="rounded border border-transparent text-primary-1 outline-none hover:text-primary-2 focus:border-white"
-              onClick={() => setForm("register")}
-            >
-              Sign up
-            </button>
-          </p>
-        </>
-      ) : null}
-
-      {form === "register" ? (
-        <>
-          <Input
-            type="text"
-            name="name"
-            value={name}
-            setter={setName}
-            placeholder="Enter your name"
-            icon={<IconUser />}
-            label="Name"
-            autoFocus={true}
-            error={registerMutation.error?.data?.zodError?.fieldErrors.name}
-          />
-
-          <Input
-            type="email"
-            name="email"
-            value={email}
-            setter={(email) => {
-              setEmail(email);
-              setUserEmailForActivation(email);
-            }}
-            placeholder="Enter your email"
-            icon={<IconEmail />}
-            label="Email"
-            error={registerMutation.error?.data?.zodError?.fieldErrors.email}
-          />
-
-          <Input
-            type="password"
-            name="password"
-            value={password}
-            setter={setPassword}
-            placeholder="Enter your password"
-            icon={<IconPassword />}
-            label="Password"
-            toggleType={true}
-            error={registerMutation.error?.data?.zodError?.fieldErrors.password}
-          />
-
-          <Input
-            type="password"
-            name="repassword"
-            value={repassword}
-            setter={setRepassword}
-            placeholder="Repeat your password"
-            icon={<IconPassword />}
-            label="Password confirmation"
-            toggleType={true}
-            error={
-              registerMutation.error?.data?.zodError?.fieldErrors.repassword
-            }
-          />
-
-          {registerMutation.isError ? (
-            <Alert
-              type="error"
-              message={
-                registerMutation.error.data?.zodError
-                  ? "There are errors that need your attention."
-                  : registerMutation.error.message
-              }
+        <div className="flex gap-4 items-center flex-col sm:flex-row">
+          <a
+            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert"
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={20}
+              height={20}
             />
-          ) : null}
-
-          {registerMutation.isSuccess ? (
-            <Alert
-              type="success"
-              message="You have been successfully registered! Please check your email to activate your account."
-            />
-          ) : null}
-
-          {resendActivationEmailMutation.isError ? (
-            <Alert
-              type="error"
-              message={
-                resendActivationEmailMutation.error.data?.zodError
-                  ? "There are errors that need your attention."
-                  : resendActivationEmailMutation.error.message
-              }
-            />
-          ) : null}
-
-          {resendActivationEmailMutation.isSuccess ? (
-            <Alert
-              type="success"
-              message="Activation email successfully sent! Please check your email to activate your account."
-            />
-          ) : null}
-
-          {displayResendActivationEmail ? (
-            <Button
-              type="button"
-              variant="outline"
-              label="Resend activation email"
-              callback={() =>
-                handleResendActivationEmail(userEmailForActivation)
-              }
-              loading={resendActivationEmailMutation.isPending}
-            />
-          ) : null}
-
-          <Button
-            loading={registerMutation.isPending}
-            type="submit"
-            label="Register"
+            Deploy now
+          </a>
+          <a
+            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read our docs
+          </a>
+        </div>
+      </main>
+      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/file.svg"
+            alt="File icon"
+            width={16}
+            height={16}
           />
-
-          <p className="text-center text-sm font-medium text-secondary-4">
-            Already have an account?{" "}
-            <button
-              type="button"
-              className="rounded border border-transparent text-primary-1 outline-none hover:text-primary-2 focus:border-white"
-              onClick={() => setForm("login")}
-            >
-              Login
-            </button>
-          </p>
-        </>
-      ) : null}
-
-      {form === "recover" ? (
-        <>
-          <Input
-            type="email"
-            name="email"
-            value={email}
-            setter={setEmail}
-            placeholder="Enter your email"
-            icon={<IconEmail />}
-            label="Email"
-            autoFocus={true}
+          Learn
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/window.svg"
+            alt="Window icon"
+            width={16}
+            height={16}
           />
-
-          <Button loading={loading} type="submit" label="Recover" />
-
-          <p className="text-center text-sm font-medium text-secondary-4">
-            <button
-              type="button"
-              className="rounded border border-transparent text-primary-1 outline-none hover:text-primary-2 focus:border-white"
-              onClick={() => setForm("login")}
-            >
-              Return to login
-            </button>
-          </p>
-        </>
-      ) : null}
-    </form>
+          Examples
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/globe.svg"
+            alt="Globe icon"
+            width={16}
+            height={16}
+          />
+          Go to nextjs.org →
+        </a>
+      </footer>
+    </div>
   );
 }

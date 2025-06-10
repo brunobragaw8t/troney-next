@@ -17,10 +17,13 @@ Here's a [demo](https://troney-next.netlify.app/).
 
 ## ToDo and milestones
 
-- [x] Create auth landing
-- [x] Create user registration
-- [x] Create user activation
-- [x] Create route to resend activation email
+- [ ] Validate environment variables
+- [ ] Switch ESLint for Biome
+- [ ] Setup Prettier
+- [ ] Create auth landing
+- [ ] Create user registration
+- [ ] Create user activation
+- [ ] Create route to resend activation email
 - [ ] Create user login by issuing a JWT
 - [ ] Create password recovery functionality
 - [ ] Send email when user password changes
@@ -28,15 +31,24 @@ Here's a [demo](https://troney-next.netlify.app/).
 - [ ] Create wallets CRUD
 - [ ] Create buckets CRUD
 - [ ] Create categories CRUD
+- [ ] Seed default categories for user
+- [ ] Emoji in categories (to serve as icons when minimized)
 - [ ] Create earnings CRUD
 - [ ] Create expenses CRUD
 - [ ] Create movements CRUD
+- [ ] Add autocomplete of previously registered expenses, with price
+- [ ] View history of prices
+- [ ] Keyboard navigation in lists
+- [ ] Charts per month, trimester, semester and year
+- [ ] Switch between pie and bar chart
+- [ ] OCR
+- [ ] Extraordinary expense (doesn't count toward average)
 
 ## Technologies
 
 - [React](https://react.dev/) & [Next.js](https://nextjs.org/)
 - [tRPC](https://trpc.io/)
 - [Zod](https://zod.dev/)
-- [MySQL](https://www.mysql.com/) & [Drizzle ORM](https://orm.drizzle.team/)
+- [PostgreSQL](https://www.postgresql.org/) & [Drizzle ORM](https://orm.drizzle.team/)
 - [Nodemailer](https://www.nodemailer.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
