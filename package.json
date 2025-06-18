@@ -11,7 +11,10 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.3"
+    "next": "15.3.3",
+    "@t3-oss/env-nextjs": "^0.13.8",
+    "zod": "^3.25.67",
+    "jiti": "1"
   },
   "devDependencies": {
     "typescript": "^5",
