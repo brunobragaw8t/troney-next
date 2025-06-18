@@ -13,7 +13,7 @@ Some of its features are:
 - Monthly graphs;
 - Keyboard shortcuts for navigating the UI.
 
-Here's a [demo](https://troney-next.netlify.app/).
+Here's a [demo](https://troney.vercel.app/).
 
 ## ToDo and milestones
 
