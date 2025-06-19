@@ -18,7 +18,8 @@ Here's a [demo](https://troney.vercel.app/).
 ## ToDo and milestones
 
 - [x] Validate environment variables
-- [x] Replace ESLint and Prettier with Biome
+- [x] Switch ESLint for Biome
+- [x] Setup Prettier
 - [ ] Create auth landing
 - [ ] Create user registration
 - [ ] Create user activation
