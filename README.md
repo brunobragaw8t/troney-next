@@ -13,7 +13,8 @@ Some of its features are:
 - Monthly graphs;
 - Keyboard shortcuts for navigating the UI.
 
-Here's a [demo](https://troney.vercel.app/).
+Here's a [demo](https://troney.vercel.app/),
+and here's the [Storybook](https://troney-storybook.vercel.app/)
 
 ## ToDo and milestones
 
