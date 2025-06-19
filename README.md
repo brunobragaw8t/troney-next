@@ -20,6 +20,7 @@ Here's a [demo](https://troney.vercel.app/).
 - [x] Validate environment variables
 - [x] Switch ESLint for Biome
 - [x] Setup Prettier
+- [x] Setup Storybook
 - [ ] Create auth landing
 - [ ] Create user registration
 - [ ] Create user activation
