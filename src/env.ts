@@ -10,7 +10,7 @@ export const env = createEnv({
     SMTP_SECURE: z.coerce.boolean().default(false),
     SMTP_AUTH_USER: z.string().email(),
     SMTP_AUTH_PASS: z.string(),
-    SMTP_FROM_NAME: z.string().default('Troney'),
+    SMTP_FROM_NAME: z.string().default("Troney"),
     SMTP_FROM_EMAIL: z.string().email(),
   },
   client: {

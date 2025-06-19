@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "bunx biome lint ./src",
+    "format": "bunx biome format ./src"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -17,14 +18,12 @@
     "jiti": "1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@biomejs/biome": "2.0.0",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.3",
-    "@eslint/eslintrc": "^3"
+    "typescript": "^5"
   }
 }
