@@ -35,21 +35,21 @@ export function Input(props: InputProps) {
 
   return (
     <div>
-      {props.label ? (
+      {props.label && (
         <label
           htmlFor={id}
           className="mb-2 block text-sm font-medium text-white"
         >
           {props.label}
         </label>
-      ) : null}
+      )}
 
       <div className="relative">
-        {props.icon ? (
-          <div className="text-secondary-4 pointer-events-none absolute left-0 top-0 flex h-full items-center pl-3">
+        {props.icon && (
+          <div className="pointer-events-none absolute left-0 top-0 flex h-full items-center pl-3 text-secondary-4">
             <props.icon size={16} />
           </div>
-        ) : null}
+        )}
 
         <input
           ref={elRef}
@@ -59,23 +59,23 @@ export function Input(props: InputProps) {
           value={props.value}
           onChange={props.onChange}
           placeholder={props.placeholder}
-          className={`bg-secondary-3 placeholder-secondary-4 w-full rounded-lg border border-transparent py-2 outline-none ${props.icon ? "pl-10" : "pl-3"} ${props.rightAccessoryIcon ? "pr-10" : "pr-3"} text-white focus:border-white`}
+          className={`w-full rounded-lg border border-transparent bg-secondary-3 py-2 placeholder-secondary-4 outline-none ${props.icon ? "pl-10" : "pl-3"} ${props.rightAccessoryIcon ? "pr-10" : "pr-3"} text-white focus:border-white`}
         />
 
-        {props.rightAccessoryIcon ? (
+        {props.rightAccessoryIcon && (
           <button
             type="button"
-            className="text-secondary-4 absolute right-1 top-1 flex items-center rounded-lg border border-transparent p-2 outline-none focus:border-white"
+            className="absolute right-1 top-1 flex items-center rounded-lg border border-transparent p-2 text-secondary-4 outline-none focus:border-white"
             onClick={handleRightAccessoryAction}
             aria-label={props.rightAccessoryLabel}
             title={props.rightAccessoryLabel}
           >
             <props.rightAccessoryIcon size={16} />
           </button>
-        ) : null}
+        )}
       </div>
 
-      {props.error ? (
+      {props.error && (
         <p className="mt-1 text-xs text-red-400">
           {Array.isArray(props.error)
             ? props.error.map((e) => (
@@ -85,7 +85,7 @@ export function Input(props: InputProps) {
               ))
             : props.error}
         </p>
-      ) : null}
+      )}
     </div>
   );
 }
