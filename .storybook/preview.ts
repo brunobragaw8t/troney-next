@@ -1,6 +1,6 @@
 import type { Preview } from "@storybook/nextjs-vite";
-
 import "../src/app/globals.css";
+import { themes } from "storybook/internal/theming";
 
 const preview: Preview = {
   parameters: {
@@ -14,6 +14,9 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+    },
+    docs: {
+      theme: themes.dark,
     },
   },
   initialGlobals: {
