@@ -8,5 +8,7 @@ jiti("./src/env");
 
 /** @type {import('next').NextConfig} */
 export default {
-  /** ... */
+  redirects: async () => [
+    { source: "/", destination: "/auth", permanent: false },
+  ],
 };
