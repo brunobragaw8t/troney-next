@@ -22,7 +22,7 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [x] Switch ESLint for Biome
 - [x] Setup Prettier
 - [x] Setup Storybook
-- [ ] Create auth landing
+- [x] Create auth landing
 - [ ] Create user registration
 - [ ] Create user activation
 - [ ] Create route to resend activation email
