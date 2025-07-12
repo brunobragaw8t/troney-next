@@ -6,6 +6,9 @@ import { Eye, EyeClosed, Key, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { AuthFormFooter } from "./auth-form-footer";
 import type { Form } from "./auth-form";
+import { useMutation } from "@tanstack/react-query";
+import { Alert, AlertProps } from "@/components/ui/alert/alert";
+import { useTRPC } from "@/trpc/client";
 
 interface RegisterFormProps {
   className?: string;
@@ -52,18 +55,65 @@ export function RegisterForm({
   ] = useState(false);
 
   function toggleDisplayPasswordConfirmationAsText() {
-    setDisplayPasswordAsText(!displayPasswordAsText);
+    setDisplayPasswordConfirmationAsText(!displayPasswordConfirmationAsText);
   }
 
   const [loading, setLoading] = useState(false);
+
+  const [alert, setAlert] = useState<AlertProps>({
+    type: "success",
+    message: "",
+  });
+
+  const trpc = useTRPC();
+
+  const registerMutation = useMutation(
+    trpc.auth.register.mutationOptions({
+      onSuccess: () => {
+        setAlert({
+          type: "success",
+          message:
+            "Registration successful! Please check your email to verify your account.",
+        });
+
+        setLoading(false);
+
+        setName("");
+        setPassword("");
+        setPasswordConfirmation("");
+      },
+      onError: (error) => {
+        setAlert({
+          type: "error",
+          message: error.data?.zodError
+            ? "There are errors that need your attention."
+            : error.message,
+        });
+
+        setLoading(false);
+      },
+    }),
+  );
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setLoading(true);
 
+    setAlert({
+      type: "success",
+      message: "",
+    });
+
     setDisplayPasswordAsText(false);
     setDisplayPasswordConfirmationAsText(false);
+
+    registerMutation.mutate({
+      name: name.trim(),
+      email: email.trim(),
+      password,
+      passwordConfirmation,
+    });
   }
 
   function goToLoginForm() {
@@ -81,6 +131,7 @@ export function RegisterForm({
         onChange={handleNameChange}
         placeholder="Enter your name"
         autoFocus={true}
+        error={registerMutation.error?.data?.zodError?.fieldErrors?.name}
       />
 
       <Input
@@ -91,6 +142,7 @@ export function RegisterForm({
         value={email}
         onChange={onEmailChange}
         placeholder="Enter your email"
+        error={registerMutation.error?.data?.zodError?.fieldErrors?.email}
       />
 
       <Input
@@ -106,6 +158,7 @@ export function RegisterForm({
         rightAccessoryLabel={
           displayPasswordAsText ? "Hide password" : "Show password"
         }
+        error={registerMutation.error?.data?.zodError?.fieldErrors?.password}
       />
 
       <Input
@@ -121,7 +174,13 @@ export function RegisterForm({
         rightAccessoryLabel={
           displayPasswordConfirmationAsText ? "Hide password" : "Show password"
         }
+        error={
+          registerMutation.error?.data?.zodError?.fieldErrors
+            ?.passwordConfirmation
+        }
       />
+
+      {alert.message && <Alert type={alert.type} message={alert.message} />}
 
       <Button loading={loading} type="submit" label="Register" />
 
