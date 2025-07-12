@@ -28,7 +28,9 @@ const meta = {
     },
     rightAccessoryIcon: { table: { disable: true } },
     rightAccessoryAction: { table: { disable: true } },
-    error: { table: { disable: true } },
+    error: {
+      control: "text",
+    },
   },
 } satisfies Meta<typeof Input>;
 
@@ -108,5 +110,31 @@ export const Password: Story = {
         rightAccessoryLabel={displayAsText ? "Hide password" : "Show password"}
       />
     );
+  },
+};
+
+export const WithErrors: Story = {
+  args: {
+    label: "Password",
+    icon: LockKeyhole,
+    type: "password",
+    name: "password",
+    value: "",
+    onChange: () => {},
+    placeholder: "Enter your password",
+    error: [
+      "Password must be at least 8 characters long",
+      "Password must contain at least one number",
+      "Password must contain at least one uppercase letter",
+    ],
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
+      setValue(e.target.value);
+    }
+
+    return <Input {...args} value={value} onChange={handleOnChange} />;
   },
 };

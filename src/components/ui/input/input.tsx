@@ -19,6 +19,7 @@ interface InputProps {
 
 export function Input(props: InputProps) {
   const id = useId();
+  const errorId = useId();
   const elRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -59,7 +60,9 @@ export function Input(props: InputProps) {
           value={props.value}
           onChange={props.onChange}
           placeholder={props.placeholder}
-          className={`w-full rounded-lg border border-transparent bg-secondary-3 py-2 placeholder-secondary-4 outline-none ${props.icon ? "pl-10" : "pl-3"} ${props.rightAccessoryIcon ? "pr-10" : "pr-3"} text-white focus:border-white`}
+          className={`w-full rounded-lg border bg-secondary-3 py-2 placeholder-secondary-4 outline-none focus:border-white ${props.icon ? "pl-10" : "pl-3"} ${props.rightAccessoryIcon ? "pr-10" : "pr-3"} text-white ${props.error ? "border-red-400" : "border-transparent"} `}
+          aria-invalid={props.error ? "true" : "false"}
+          aria-describedby={props.error ? errorId : undefined}
         />
 
         {props.rightAccessoryIcon && (
@@ -76,7 +79,7 @@ export function Input(props: InputProps) {
       </div>
 
       {props.error && (
-        <p className="mt-1 text-xs text-red-400">
+        <p id={errorId} className="mt-1 text-xs text-red-400">
           {Array.isArray(props.error)
             ? props.error.map((e) => (
                 <span className="block" key={e}>
