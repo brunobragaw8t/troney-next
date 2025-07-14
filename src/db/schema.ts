@@ -21,7 +21,7 @@ export const activationTokens = pgTable("activation_tokens", {
   userId: uuid("user_id")
     .notNull()
     .unique()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: "cascade" }),
   value: varchar("value", { length: 32 }).notNull().unique(),
   resentAt: timestamp("resent_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
