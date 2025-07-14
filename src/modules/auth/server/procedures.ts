@@ -1,6 +1,6 @@
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { db } from "@/db";
-import { usersTable } from "@/db/schema";
+import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
@@ -38,8 +38,8 @@ export const authRouter = createTRPCRouter({
 
       const existingUser = await db
         .select()
-        .from(usersTable)
-        .where(eq(usersTable.email, email));
+        .from(users)
+        .where(eq(users.email, email));
 
       if (existingUser.length > 0) {
         throw new TRPCError({
@@ -52,16 +52,16 @@ export const authRouter = createTRPCRouter({
       const passwordHash = bcrypt.hashSync(password, salt);
 
       const [user] = await db
-        .insert(usersTable)
+        .insert(users)
         .values({
           name,
           email,
           passwordHash,
         })
         .returning({
-          id: usersTable.id,
-          name: usersTable.name,
-          email: usersTable.email,
+          id: users.id,
+          name: users.name,
+          email: users.email,
         });
 
       return user;
