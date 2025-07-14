@@ -6,6 +6,8 @@ import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import z from "zod";
+import * as nodemailer from "nodemailer";
+import { env } from "@/env";
 
 const passwordSchema = z
   .string()
@@ -69,10 +71,40 @@ export const authRouter = createTRPCRouter({
       const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
       const expiresAt = new Date(Date.now() + TWENTY_FOUR_HOURS);
 
-      await db.insert(activationTokens).values({
-        userId: user.id,
-        value: activationTokenValue,
-        expiresAt,
+      const [activationToken] = await db
+        .insert(activationTokens)
+        .values({
+          userId: user.id,
+          value: activationTokenValue,
+          expiresAt,
+        })
+        .returning({
+          id: activationTokens.id,
+          userId: activationTokens.userId,
+          value: activationTokens.value,
+          expiresAt: activationTokens.expiresAt,
+        });
+
+      const transport = nodemailer.createTransport({
+        host: env.SMTP_HOST,
+        port: env.SMTP_PORT,
+        secure: env.SMTP_SECURE,
+        auth: {
+          user: env.SMTP_AUTH_USER,
+          pass: env.SMTP_AUTH_PASS,
+        },
+      });
+
+      const activationLink = `${env.NEXT_PUBLIC_APP_URL}/activate/${activationToken.value}`;
+
+      await transport.sendMail({
+        from: `"${env.SMTP_FROM_NAME}" <${env.SMTP_FROM_EMAIL}>`,
+        to: user.email,
+        subject: "Troney | Activate your account",
+        html: `Hi, ${user.name}.<br />
+          Your account was successfully created. Please click the following link to active it:<br />
+          <br />
+          <a href="${activationLink}" target="_blank">${activationLink}</a>`,
       });
 
       return true;
