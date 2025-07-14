@@ -1,9 +1,10 @@
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { users, activationTokens } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import z from "zod";
 
 const passwordSchema = z
@@ -64,6 +65,16 @@ export const authRouter = createTRPCRouter({
           email: users.email,
         });
 
-      return user;
+      const activationTokenValue = crypto.randomBytes(16).toString("hex");
+      const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+      const expiresAt = new Date(Date.now() + TWENTY_FOUR_HOURS);
+
+      await db.insert(activationTokens).values({
+        userId: user.id,
+        value: activationTokenValue,
+        expiresAt,
+      });
+
+      return true;
     }),
 });
