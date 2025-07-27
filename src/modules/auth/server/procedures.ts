@@ -109,4 +109,50 @@ export const authRouter = createTRPCRouter({
 
       return true;
     }),
+
+  activate: baseProcedure
+    .input(
+      z.object({
+        token: z.string().min(1, "Activation token is required"),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const { token } = input;
+
+      const [data] = await db
+        .select({
+          id: activationTokens.id,
+          userId: activationTokens.userId,
+          expiresAt: activationTokens.expiresAt,
+          userActivatedAt: users.activatedAt,
+        })
+        .from(activationTokens)
+        .innerJoin(users, eq(activationTokens.userId, users.id))
+        .where(eq(activationTokens.value, token));
+
+      if (!data || new Date() > data.expiresAt) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Activation token is invalid or expired",
+        });
+      }
+
+      if (data.userActivatedAt) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User is already activated",
+        });
+      }
+
+      await db
+        .update(users)
+        .set({ activatedAt: new Date() })
+        .where(eq(users.id, data.userId));
+
+      await db
+        .delete(activationTokens)
+        .where(eq(activationTokens.userId, data.userId));
+
+      return true;
+    }),
 });
