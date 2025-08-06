@@ -7,8 +7,4 @@ const jiti = createJiti(fileURLToPath(import.meta.url));
 jiti("./src/env");
 
 /** @type {import('next').NextConfig} */
-export default {
-  redirects: async () => [
-    { source: "/", destination: "/auth", permanent: false },
-  ],
-};
+export default {};

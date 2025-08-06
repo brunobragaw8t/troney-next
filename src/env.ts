@@ -5,6 +5,8 @@ export const env = createEnv({
   server: {
     JWT_SECRET: z.string(),
     DATABASE_URL: z.string(),
+    REDIS_URL: z.string(),
+    REDIS_TOKEN: z.string(),
     SMTP_HOST: z.string(),
     SMTP_PORT: z.coerce.number().int().positive().default(587),
     SMTP_SECURE: z

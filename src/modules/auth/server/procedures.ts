@@ -1,4 +1,7 @@
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+import {
+  baseProcedure,
+  createTRPCRouter,
+} from "@/trpc/init";
 import { db } from "@/db";
 import { users, activationTokens } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -8,6 +11,7 @@ import crypto from "crypto";
 import z from "zod";
 import * as nodemailer from "nodemailer";
 import { env } from "@/env";
+import { createSession, setSessionCookie } from "./sessions";
 
 const passwordSchema = z
   .string()
@@ -152,6 +156,54 @@ export const authRouter = createTRPCRouter({
       await db
         .delete(activationTokens)
         .where(eq(activationTokens.userId, data.userId));
+
+      return true;
+    }),
+
+  login: baseProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+        password: z
+          .string()
+          .min(1, "Password is required")
+          .max(256, "Password is too long"),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const { email, password } = input;
+
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email));
+
+      if (!user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid email and/or password",
+        });
+      }
+
+      const correctPassword = bcrypt.compareSync(password, user.passwordHash);
+
+      if (!correctPassword) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid email and/or password",
+        });
+      }
+
+      if (!user.activatedAt) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Please check your email to activate your account",
+        });
+      }
+
+      const sessionToken = await createSession(user.id);
+
+      await setSessionCookie(sessionToken);
 
       return true;
     }),

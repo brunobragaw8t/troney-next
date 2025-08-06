@@ -23,13 +23,14 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [x] Setup Prettier
 - [x] Setup Storybook
 - [x] Create auth landing
-- [ ] Create user registration
-- [ ] Create user activation
+- [x] Create user registration
+- [x] Create user activation
 - [ ] Create route to resend activation email
-- [ ] Create user login by issuing a JWT
+- [x] Create user login
+- [ ] Create user logout
 - [ ] Create password recovery functionality
 - [ ] Send email when user password changes
-- [ ] Implement refresh token functionality
+- [ ] Implement refresh session functionality
 - [ ] Create wallets CRUD
 - [ ] Create buckets CRUD
 - [ ] Create categories CRUD
@@ -52,5 +53,6 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [tRPC](https://trpc.io/)
 - [Zod](https://zod.dev/)
 - [PostgreSQL](https://www.postgresql.org/) & [Drizzle ORM](https://orm.drizzle.team/)
+- [Redis](https://redis.io/) & [Upstash](https://upstash.com/)
 - [Nodemailer](https://www.nodemailer.com/)
 - [Tailwind CSS](https://tailwindcss.com/)

@@ -7,6 +7,10 @@ import { Eye, EyeClosed, Key, Mail } from "lucide-react";
 import { useState } from "react";
 import { AuthFormFooter } from "./auth-form-footer";
 import type { Form } from "./auth-form";
+import { useTRPC } from "@/trpc/client";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { Alert, AlertProps } from "@/components/ui/alert/alert";
 
 interface LoginFormProps {
   className?: string;
@@ -41,12 +45,53 @@ export function LoginForm({
 
   const [loading, setLoading] = useState(false);
 
+  const [alert, setAlert] = useState<AlertProps>({
+    type: "success",
+    message: "",
+  });
+
+  const router = useRouter();
+  const trpc = useTRPC();
+
+  const loginMutation = useMutation(
+    trpc.auth.login.mutationOptions({
+      onSuccess: () => {
+        setAlert({
+          type: "success",
+          message: "Login successful! Redirecting...",
+        });
+
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 2000);
+      },
+      onError: (error) => {
+        setAlert({
+          type: "error",
+          message: error.data?.zodError
+            ? "There are errors that need your attention."
+            : error.message,
+        });
+
+        setLoading(false);
+      },
+    }),
+  );
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setLoading(true);
 
-    setDisplayPasswordAsText(false);
+    setAlert({
+      type: "success",
+      message: "",
+    });
+
+    loginMutation.mutate({
+      email,
+      password,
+    });
   }
 
   function goToRecoverForm() {
@@ -68,6 +113,7 @@ export function LoginForm({
         onChange={onEmailChange}
         placeholder="Enter your email"
         autoFocus={true}
+        error={loginMutation.error?.data?.zodError?.fieldErrors.email}
       />
 
       <Input
@@ -83,6 +129,7 @@ export function LoginForm({
         rightAccessoryLabel={
           displayPasswordAsText ? "Hide password" : "Show password"
         }
+        error={loginMutation.error?.data?.zodError?.fieldErrors.password}
       />
 
       <div className="flex justify-between">
@@ -104,6 +151,8 @@ export function LoginForm({
           Forgot password?
         </button>
       </div>
+
+      {alert.message && <Alert type={alert.type} message={alert.message} />}
 
       <Button loading={loading} type="submit" label="Login" />
 
