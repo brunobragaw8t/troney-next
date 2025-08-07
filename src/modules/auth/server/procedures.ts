@@ -1,7 +1,4 @@
-import {
-  baseProcedure,
-  createTRPCRouter,
-} from "@/trpc/init";
+import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { db } from "@/db";
 import { users, activationTokens } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -11,7 +8,13 @@ import crypto from "crypto";
 import z from "zod";
 import * as nodemailer from "nodemailer";
 import { env } from "@/env";
-import { createSession, setSessionCookie } from "./sessions";
+import {
+  createSession,
+  deleteSession,
+  getSessionCookie,
+  setSessionCookie,
+  unsetSessionCookie,
+} from "./sessions";
 
 const passwordSchema = z
   .string()
@@ -201,10 +204,19 @@ export const authRouter = createTRPCRouter({
         });
       }
 
-      const sessionToken = await createSession(user.id);
+      const sessionToken = await createSession({ userId: user.id });
 
       await setSessionCookie(sessionToken);
 
       return true;
     }),
+
+  logout: baseProcedure.mutation(async () => {
+    const sessionToken = await getSessionCookie();
+
+    if (!sessionToken) return;
+
+    await deleteSession(sessionToken);
+    await unsetSessionCookie();
+  }),
 });

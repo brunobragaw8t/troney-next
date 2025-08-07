@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentSession } from "./modules/auth/server/sessions";
+import { getSession } from "./modules/auth/server/sessions";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  const session = await getCurrentSession();
+  const session = await getSession();
   const loggedIn = session !== null;
 
   const authRoutes = ["/auth", "/activate"];

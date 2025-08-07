@@ -1,4 +1,4 @@
-import { getCurrentSession } from "@/modules/auth/server/sessions";
+import { getSession } from "@/modules/auth/server/sessions";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { cache } from "react";
 import { ZodError } from "zod";
@@ -8,7 +8,7 @@ export const createTRPCContext = cache(async () => {
    * @see: https://trpc.io/docs/server/context
    */
 
-  const session = await getCurrentSession();
+  const session = await getSession();
 
   return {
     session,

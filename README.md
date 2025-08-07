@@ -27,7 +27,7 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [x] Create user activation
 - [ ] Create route to resend activation email
 - [x] Create user login
-- [ ] Create user logout
+- [x] Create user logout
 - [ ] Create password recovery functionality
 - [ ] Send email when user password changes
 - [ ] Implement refresh session functionality
