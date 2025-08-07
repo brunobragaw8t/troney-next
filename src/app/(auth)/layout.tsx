@@ -1,6 +1,10 @@
 import Brand from "@/components/icons/brand";
 
-export function AuthLayout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <main className="flex min-h-screen items-center justify-center">
       <div className="flex w-96 flex-col gap-8 rounded-xl bg-secondary-2 p-8">

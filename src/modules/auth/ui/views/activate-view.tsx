@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AuthLayout } from "../layout";
 import { Alert, AlertProps } from "@/components/ui/alert/alert";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import { useTRPC } from "@/trpc/client";
@@ -48,18 +47,12 @@ export function ActivateView({ token }: ActivateViewProps) {
   }, [token]);
 
   if (loading) {
-    return (
-      <AuthLayout>
-        <Spinner message="Activating your account..." />
-      </AuthLayout>
-    );
+    return <Spinner message="Activating your account..." />;
   }
 
   return (
-    <AuthLayout>
-      <div className="flex flex-col items-center justify-center space-y-4">
-        <Alert type={alert.type} message={alert.message} />
-      </div>
-    </AuthLayout>
+    <div className="flex flex-col items-center justify-center space-y-4">
+      <Alert type={alert.type} message={alert.message} />
+    </div>
   );
 }
