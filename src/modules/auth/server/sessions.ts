@@ -38,7 +38,6 @@ export async function getSession() {
   const { success, data } = sessionDataSchema.safeParse(res);
 
   if (!success) {
-    console.log("Invalid session data");
     await unsetSessionCookie();
     await deleteSession(token);
     return null;
@@ -71,8 +70,6 @@ export async function getSessionCookie() {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
 
-  console.log("token:", token);
-
   if (!token) {
     return null;
   }
@@ -83,5 +80,4 @@ export async function getSessionCookie() {
 export async function unsetSessionCookie(): Promise<void> {
   const cookieStore = await cookies();
   const res = cookieStore.delete(SESSION_COOKIE_NAME);
-  console.log("res:", res);
 }
