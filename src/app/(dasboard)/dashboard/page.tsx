@@ -22,7 +22,8 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1>Dashboard</h1>
+      <h1 className="mb-2 text-3xl font-bold text-white">Dashboard</h1>
+
       <Button type="button" label="Logout" onClick={handleLogout} />
     </div>
   );
