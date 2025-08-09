@@ -1,5 +1,7 @@
 # Troney
 
+## Overview
+
 Reworking this in Next.js. Original project [made with Nuxt](https://github.com/brunobragaw8t/troney).
 
 Troney (word-play for tracking money) is an expense tracker web app focused on a
@@ -56,3 +58,10 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [Redis](https://redis.io/) & [Upstash](https://upstash.com/)
 - [Nodemailer](https://www.nodemailer.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
+
+## Key decisions
+
+- No auth libraries, to learn how to implement auth from scratch;
+- No shadcn/ui, to learn more about accessibility;
+- No animations nor transitions, focusing on simplicity;
+- Desktop-first experience, focused on keyboard navigation and accessibility.
