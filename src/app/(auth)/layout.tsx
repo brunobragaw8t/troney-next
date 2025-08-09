@@ -1,4 +1,4 @@
-import Brand from "@/components/icons/brand";
+import { Logo } from "@/components/brand/logo";
 
 export default function AuthLayout({
   children,
@@ -9,9 +9,8 @@ export default function AuthLayout({
     <main className="flex min-h-screen items-center justify-center">
       <div className="flex w-96 flex-col gap-8 rounded-xl bg-secondary-2 p-8">
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-center gap-2 text-2xl font-semibold text-white">
-            <Brand />
-            <h1>Troney</h1>
+          <div className="flex justify-center">
+            <Logo />
           </div>
 
           <span className="text-center font-medium text-secondary-4">
