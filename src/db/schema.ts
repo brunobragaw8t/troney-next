@@ -1,6 +1,12 @@
 import "dotenv/config";
-import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import {
+  decimal,
+  pgTable,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -30,11 +36,27 @@ export const activationTokens = pgTable("activation_tokens", {
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
 });
 
-export const usersRelations = relations(users, ({ one }) => ({
+export const wallets = pgTable("wallets", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 255 }).notNull(),
+  balance: decimal("balance", { precision: 10, scale: 2 })
+    .notNull()
+    .default("0"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
+});
+
+export const usersRelations = relations(users, ({ one, many }) => ({
   activationToken: one(activationTokens, {
     fields: [users.id],
     references: [activationTokens.userId],
   }),
+  wallets: many(wallets),
 }));
 
 export const activationTokensRelations = relations(
@@ -46,3 +68,10 @@ export const activationTokensRelations = relations(
     }),
   }),
 );
+
+export const walletsRelations = relations(wallets, ({ one }) => ({
+  user: one(users, {
+    fields: [wallets.userId],
+    references: [users.id],
+  }),
+}));
