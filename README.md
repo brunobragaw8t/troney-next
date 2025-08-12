@@ -50,6 +50,10 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [ ] Switch between pie and bar chart
 - [ ] OCR
 - [ ] Extraordinary expense (doesn't count toward average)
+- [ ] Line chart of balance across wallets (with average growth per month)
+- [ ] Mark expenses as recurrent
+- [ ] Line chart of recurrent bills going up and down (e.g. to track electricity consumption and water usage)
+- [ ] Log out user when failing to get their data from database
 
 ## Technologies
 
