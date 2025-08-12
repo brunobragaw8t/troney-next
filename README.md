@@ -33,12 +33,14 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [ ] Create password recovery functionality
 - [ ] Send email when user password changes
 - [ ] Implement refresh session functionality
+- [x] Seed default wallets for user
 - [ ] Create wallets CRUD
 - [ ] Create buckets CRUD
 - [ ] Create categories CRUD
 - [ ] Seed default categories for user
 - [ ] Emoji in categories (to serve as icons when minimized)
 - [ ] Create earnings CRUD
+- [ ] Prevent registering earnings if buckets aren't 100%
 - [ ] Create expenses CRUD
 - [ ] Create movements CRUD
 - [ ] Add autocomplete of previously registered expenses, with price

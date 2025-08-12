@@ -1,6 +1,6 @@
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { db } from "@/db";
-import { users, activationTokens } from "@/db/schema";
+import { users, activationTokens, wallets } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
@@ -151,14 +151,27 @@ export const authRouter = createTRPCRouter({
         });
       }
 
-      await db
-        .update(users)
-        .set({ activatedAt: new Date() })
-        .where(eq(users.id, data.userId));
-
-      await db
-        .delete(activationTokens)
-        .where(eq(activationTokens.userId, data.userId));
+      await Promise.all([
+        db
+          .update(users)
+          .set({ activatedAt: new Date() })
+          .where(eq(users.id, data.userId)),
+        db.insert(wallets).values([
+          {
+            userId: data.userId,
+            name: "Bank",
+            balance: "0.00",
+          },
+          {
+            userId: data.userId,
+            name: "Cash",
+            balance: "0.00",
+          },
+        ]),
+        db
+          .delete(activationTokens)
+          .where(eq(activationTokens.userId, data.userId)),
+      ]);
 
       return true;
     }),
