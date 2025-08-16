@@ -1,7 +1,12 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-type Variant = "primary" | "outline" | "danger";
+type Variant =
+  | "primary"
+  | "primary-ghost"
+  | "outline"
+  | "danger"
+  | "danger-ghost";
 type Size = "sm" | "md";
 
 type Props = {
@@ -33,9 +38,13 @@ export function Button(props: Props) {
   const variantStyles: Record<Variant, string> = {
     primary:
       "border-transparent bg-primary-1 text-secondary-1 hover:bg-primary-2",
+    "primary-ghost":
+      "border-transparent bg-primary-1/20 text-primary-1 hover:bg-primary-1/30",
     outline:
       "border-primary-1 bg-transparent text-primary-1 hover:border-primary-2 hover:text-primary-2",
-    danger: "border-transparent bg-red-500/20 text-red-400 hover:bg-red-500/30",
+    danger: "border-transparent bg-red-500 text-secondary-1 hover:bg-red-400",
+    "danger-ghost":
+      "border-transparent bg-red-500/20 text-red-400 hover:bg-red-500/30",
   };
 
   const sizeStyles: Record<
