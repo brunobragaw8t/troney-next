@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Button } from "./button";
+import { PlusCircle } from "lucide-react";
 
 const meta = {
   component: Button,
@@ -17,6 +18,15 @@ const meta = {
     variant: {
       control: "radio",
       options: ["primary", "outline"],
+    },
+    size: {
+      control: "radio",
+      options: ["sm", "md"],
+    },
+    icon: { table: { disable: true } },
+    iconPosition: {
+      control: "radio",
+      options: ["left", "right"],
     },
   },
 } satisfies Meta<typeof Button>;
@@ -47,5 +57,16 @@ export const Link: Story = {
     variant: "primary",
     href: "https://www.google.com/",
     target: "_blank",
+  },
+};
+
+export const WithIcon: Story = {
+  args: {
+    type: "button",
+    label: "New item",
+    variant: "primary",
+    loading: false,
+    icon: PlusCircle,
+    iconPosition: "left",
   },
 };
