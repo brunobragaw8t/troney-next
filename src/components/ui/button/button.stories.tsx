@@ -17,7 +17,7 @@ const meta = {
     },
     variant: {
       control: "radio",
-      options: ["primary", "outline"],
+      options: ["primary", "outline", "danger"],
     },
     size: {
       control: "radio",

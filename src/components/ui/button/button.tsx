@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-type Variant = "primary" | "outline";
+type Variant = "primary" | "outline" | "danger";
 type Size = "sm" | "md";
 
 type Props = {
@@ -35,6 +35,7 @@ export function Button(props: Props) {
       "border-transparent bg-primary-1 text-secondary-1 hover:bg-primary-2",
     outline:
       "border-primary-1 bg-transparent text-primary-1 hover:border-primary-2 hover:text-primary-2",
+    danger: "border-transparent bg-red-500/20 text-red-400 hover:bg-red-500/30",
   };
 
   const sizeStyles: Record<
