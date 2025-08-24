@@ -9,18 +9,19 @@ import {
   Wallet,
   Folder,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Keymap } from "@/components/ui/keymap/keymap";
+import { useCallback, useEffect } from "react";
 
-export function LayoutMenu() {
+export function AppMenu() {
   const pathname = usePathname();
 
   const navItems = [
     {
-      href: "/dashboard",
+      href: "/control-panel",
       icon: BarChart3,
-      label: "Dashboard",
-      keymap: "d",
+      label: "Control panel",
+      keymap: "p",
     },
     {
       href: "/earnings",
@@ -53,6 +54,34 @@ export function LayoutMenu() {
       keymap: "c",
     },
   ];
+
+  const router = useRouter();
+
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    const activeElement = document.activeElement;
+
+    const fieldIsFocused =
+      activeElement instanceof HTMLInputElement ||
+      activeElement instanceof HTMLTextAreaElement ||
+      activeElement instanceof HTMLSelectElement;
+
+    if (fieldIsFocused) return;
+
+    if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+      return;
+    }
+
+    const item = navItems.find((item) => item.keymap === event.key);
+
+    if (item) {
+      router.replace(item.href);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
 
   return (
     <nav>

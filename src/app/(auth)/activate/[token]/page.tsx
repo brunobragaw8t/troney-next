@@ -6,7 +6,7 @@ interface ActivateProps {
   }>;
 }
 
-export default async function Activate({ params }: ActivateProps) {
+export default async function Page({ params }: ActivateProps) {
   const { token } = await params;
 
   return <ActivateView token={token} />;

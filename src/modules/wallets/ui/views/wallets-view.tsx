@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { WalletsTable } from "./wallets-table";
+import { WalletsTable } from "../sections/wallets-table";
 import { Spinner } from "@/components/ui/spinner/spinner";
 // import { ErrorBoundary } from "react-error-boundary";
 

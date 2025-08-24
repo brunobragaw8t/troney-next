@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Troney",
 };
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;

@@ -1,0 +1,10 @@
+export function MovementsView() {
+  return (
+    <div>
+      <h1 className="mb-2 text-3xl font-bold text-white">Movements</h1>
+      <p className="mb-8 text-secondary-4">
+        Transactions that aren't expenses nor income
+      </p>
+    </div>
+  );
+}

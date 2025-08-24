@@ -1,10 +1,6 @@
 import { Logo } from "@/components/brand/logo";
 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <main className="flex min-h-screen items-center justify-center">
       <div className="flex w-96 flex-col gap-8 rounded-xl bg-secondary-2 p-8">

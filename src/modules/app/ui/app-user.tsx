@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function LayoutUser() {
+export function AppUser() {
   const router = useRouter();
   const trpc = useTRPC();
 

@@ -62,7 +62,7 @@ export function LoginForm({
         });
 
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push("/control-panel");
         }, 2000);
       },
       onError: (error) => {

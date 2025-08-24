@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
 
   // To remove when we have a landing page
   if (pathname === "/") {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/control-panel", req.url));
   }
 
   const session = await getSession();
@@ -16,7 +16,7 @@ export async function middleware(req: NextRequest) {
   const isAuthRoute = authRoutes.some((r) => pathname.startsWith(r));
 
   if (loggedIn && isAuthRoute) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/control-panel", req.url));
   }
 
   if (!loggedIn && !isAuthRoute) {
