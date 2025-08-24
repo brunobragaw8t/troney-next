@@ -10,6 +10,7 @@ import {
   Folder,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { Keymap } from "@/components/ui/keymap/keymap";
 
 export function LayoutMenu() {
   const pathname = usePathname();
@@ -70,9 +71,10 @@ export function LayoutMenu() {
 
               <span>{item.label}</span>
 
-              <span className="ml-auto min-w-5 rounded bg-secondary-3 px-1.5 py-0.5 text-center text-xs text-secondary-4 group-hover:text-primary-1">
-                {item.keymap}
-              </span>
+              <Keymap
+                text={item.keymap}
+                className="group-hover:text-primary-1"
+              />
             </Link>
           </li>
         ))}
