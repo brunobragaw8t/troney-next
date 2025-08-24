@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Button } from "./button";
 import { PlusCircle } from "lucide-react";
+import { Keymap } from "../keymap/keymap";
 
 const meta = {
   component: Button,
@@ -33,6 +34,9 @@ const meta = {
     iconPosition: {
       control: "radio",
       options: ["left", "right"],
+    },
+    tooltip: {
+      control: "text",
     },
   },
 } satisfies Meta<typeof Button>;
@@ -75,4 +79,36 @@ export const WithIcon: Story = {
     icon: PlusCircle,
     iconPosition: "left",
   },
+};
+
+export const WithTooltip: Story = {
+  args: {
+    type: "button",
+    label: "Hover me",
+    variant: "primary",
+    tooltip: "This is a tooltip",
+  },
+  render: (args) => (
+    <div className="flex justify-center p-10">
+      <Button {...args} />,
+    </div>
+  ),
+};
+
+export const WithKeymapTooltip: Story = {
+  args: {
+    type: "button",
+    label: "Hover me",
+    variant: "primary",
+    tooltip: (
+      <>
+        Delete <Keymap text="d" className="ml-1" />
+      </>
+    ),
+  },
+  render: (args) => (
+    <div className="flex justify-center p-10">
+      <Button {...args} />,
+    </div>
+  ),
 };

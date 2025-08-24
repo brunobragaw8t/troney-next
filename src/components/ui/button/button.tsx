@@ -15,6 +15,7 @@ type Props = {
   size?: Size;
   icon?: React.ComponentType<{ size: number }>;
   iconPosition?: "left" | "right";
+  tooltip?: React.ReactNode;
 } & (ButtonProps | LinkProps);
 
 type ButtonProps = {
@@ -31,7 +32,7 @@ type LinkProps = {
 
 export function Button(props: Props) {
   const defaultStyles =
-    "inline-block rounded-lg border text-center outline-none focus:border-white";
+    "group relative inline-block rounded-lg border text-center outline-none focus:border-white";
 
   const { variant = "primary", size = "md" } = props;
 
@@ -83,10 +84,18 @@ export function Button(props: Props) {
     </div>
   );
 
+  const tooltipElement = props.tooltip && (
+    <div className="pointer-events-none absolute bottom-full right-1/2 mb-2 translate-x-1/2 transform whitespace-nowrap rounded bg-secondary-2 px-3 py-1.5 text-xs text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+      {props.tooltip}
+      <div className="absolute right-1/2 top-full h-0 w-0 translate-x-1/2 transform border-l-4 border-r-4 border-t-4 border-transparent border-t-secondary-2"></div>
+    </div>
+  );
+
   if (props.type === "link") {
     return (
       <Link href={props.href} target={props.target} className={className}>
         {content}
+        {tooltipElement}
       </Link>
     );
   }
@@ -99,6 +108,7 @@ export function Button(props: Props) {
       className={cn(className, { "cursor-wait opacity-50": props.loading })}
     >
       {content}
+      {tooltipElement}
     </button>
   );
 }
