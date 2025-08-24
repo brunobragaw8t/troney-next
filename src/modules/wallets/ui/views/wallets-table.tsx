@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button/button";
+import { Keymap } from "@/components/ui/keymap/keymap";
 import {
   Table,
   TableBody,
@@ -50,7 +51,7 @@ export function WalletsTable() {
             <TableHeader>{wallet.name}</TableHeader>
             <TableCell>${wallet.balance}</TableCell>
             <TableCell>
-              <div className="flex items-center space-x-2">
+              <div className="flex space-x-2">
                 <Button
                   type="link"
                   icon={PencilLine}
@@ -58,6 +59,11 @@ export function WalletsTable() {
                   href={`/wallets/${wallet.id}/edit`}
                   size="sm"
                   variant="primary-ghost"
+                  tooltip={
+                    <>
+                      Edit <Keymap text="e" className="ml-1" />
+                    </>
+                  }
                 />
 
                 <Button
@@ -67,6 +73,11 @@ export function WalletsTable() {
                   onClick={() => {}}
                   size="sm"
                   variant="danger-ghost"
+                  tooltip={
+                    <>
+                      Delete <Keymap text="d" className="ml-1" />
+                    </>
+                  }
                 />
               </div>
             </TableCell>
