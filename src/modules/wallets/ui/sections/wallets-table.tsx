@@ -13,6 +13,7 @@ import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { PencilLine, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useCallback, useMemo } from "react";
 
 export function WalletsTable() {
   const router = useRouter();
@@ -22,18 +23,21 @@ export function WalletsTable() {
     trpc.wallets.getWallets.queryOptions(),
   );
 
-  function handleEdit(index: number) {
+  const handleEdit = useCallback((index: number) => {
     console.log(`Edit index ${index}`);
-  }
+  }, []);
 
-  function handleDelete(index: number) {
+  const handleDelete = useCallback((index: number) => {
     console.log(`Delete index ${index}`);
-  }
+  }, []);
 
-  const actions: TableRowActions = {
-    e: handleEdit,
-    d: handleDelete,
-  };
+  const actions: TableRowActions = useMemo(
+    () => ({
+      e: handleEdit,
+      d: handleDelete,
+    }),
+    [handleEdit, handleDelete],
+  );
 
   return (
     <Table numberOfRows={wallets.length}>

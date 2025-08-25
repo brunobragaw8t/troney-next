@@ -1,3 +1,4 @@
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { cn } from "@/lib/utils";
 import {
   createContext,
@@ -6,6 +7,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -29,39 +31,37 @@ export function Table({
 }: React.ComponentProps<"table"> & { numberOfRows: number }) {
   const [focusedRow, setFocusedRow] = useState<number | null>(null);
 
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      switch (event.key) {
-        case "ArrowUp":
-        case "k": {
-          if (focusedRow === null) {
-            setFocusedRow(0);
-          } else {
-            setFocusedRow(Math.max(focusedRow - 1, 0));
-          }
-
-          break;
-        }
-
-        case "ArrowDown":
-        case "j": {
-          if (focusedRow === null) {
-            setFocusedRow(0);
-          } else {
-            setFocusedRow(Math.min(focusedRow + 1, numberOfRows - 1));
-          }
-
-          break;
-        }
+  const goUp = useCallback(() => {
+    setFocusedRow((prev) => {
+      if (prev === null) {
+        return 0;
       }
-    },
-    [focusedRow, numberOfRows, setFocusedRow],
-  );
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+      return Math.max(prev - 1, 0);
+    });
+  }, []);
+
+  const goDown = useCallback(() => {
+    setFocusedRow((prev) => {
+      if (prev === null) {
+        return 0;
+      }
+
+      return Math.min(prev + 1, numberOfRows - 1);
+    });
+  }, [numberOfRows]);
+
+  useKeyboardShortcuts({
+    shortcuts: useMemo(
+      () => [
+        { key: "ArrowUp", action: goUp },
+        { key: "k", action: goUp },
+        { key: "ArrowDown", action: goDown },
+        { key: "j", action: goDown },
+      ],
+      [goUp, goDown],
+    ),
+  });
 
   const contextValue = {
     focusedRow,

@@ -11,77 +11,66 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Keymap } from "@/components/ui/keymap/keymap";
-import { useCallback, useEffect } from "react";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
+import { useMemo } from "react";
 
 export function AppMenu() {
   const pathname = usePathname();
 
-  const navItems = [
-    {
-      href: "/control-panel",
-      icon: BarChart3,
-      label: "Control panel",
-      keymap: "p",
-    },
-    {
-      href: "/earnings",
-      icon: TrendingUp,
-      label: "Earnings",
-      keymap: "r",
-    },
-    {
-      href: "/expenses",
-      icon: CreditCard,
-      label: "Expenses",
-      keymap: "x",
-    },
-    {
-      href: "/movements",
-      icon: ArrowLeftRight,
-      label: "Movements",
-      keymap: "m",
-    },
-    {
-      href: "/wallets",
-      icon: Wallet,
-      label: "Wallets",
-      keymap: "w",
-    },
-    {
-      href: "/categories",
-      icon: Folder,
-      label: "Categories",
-      keymap: "c",
-    },
-  ];
+  const navItems = useMemo(
+    () => [
+      {
+        href: "/control-panel",
+        icon: BarChart3,
+        label: "Control panel",
+        keymap: "p",
+      },
+      {
+        href: "/earnings",
+        icon: TrendingUp,
+        label: "Earnings",
+        keymap: "r",
+      },
+      {
+        href: "/expenses",
+        icon: CreditCard,
+        label: "Expenses",
+        keymap: "x",
+      },
+      {
+        href: "/movements",
+        icon: ArrowLeftRight,
+        label: "Movements",
+        keymap: "m",
+      },
+      {
+        href: "/wallets",
+        icon: Wallet,
+        label: "Wallets",
+        keymap: "w",
+      },
+      {
+        href: "/categories",
+        icon: Folder,
+        label: "Categories",
+        keymap: "c",
+      },
+    ],
+    [],
+  );
 
   const router = useRouter();
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    const activeElement = document.activeElement;
-
-    const fieldIsFocused =
-      activeElement instanceof HTMLInputElement ||
-      activeElement instanceof HTMLTextAreaElement ||
-      activeElement instanceof HTMLSelectElement;
-
-    if (fieldIsFocused) return;
-
-    if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
-      return;
-    }
-
-    const item = navItems.find((item) => item.keymap === event.key);
-
-    if (item) {
-      router.replace(item.href);
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+  useKeyboardShortcuts({
+    shortcuts: useMemo(
+      () =>
+        navItems.map((item) => ({
+          key: item.keymap,
+          action: () => router.replace(item.href),
+        })),
+      [navItems, router],
+    ),
+  });
 
   return (
     <nav>
