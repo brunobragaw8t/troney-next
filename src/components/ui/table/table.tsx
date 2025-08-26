@@ -134,6 +134,10 @@ export function TableRow({
         return;
       }
 
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        return;
+      }
+
       actions[event.key](rowIndex);
     },
     [rowIndex, focusedRow, actions],
