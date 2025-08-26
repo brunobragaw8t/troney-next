@@ -34,7 +34,8 @@ export function WalletsView() {
 
       <div className="mb-4 flex justify-end">
         <Button
-          type="button"
+          type="link"
+          href="/wallets/create"
           label="Add wallet"
           icon={PlusCircle}
           iconPosition="left"
