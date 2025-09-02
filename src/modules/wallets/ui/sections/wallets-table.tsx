@@ -23,9 +23,12 @@ export function WalletsTable() {
     trpc.wallets.getWallets.queryOptions(),
   );
 
-  const handleEdit = useCallback((index: number) => {
-    console.log(`Edit index ${index}`);
-  }, []);
+  const handleEdit = useCallback(
+    (index: number) => {
+      router.replace(`/wallets/${wallets[index].id}/edit`);
+    },
+    [router, wallets],
+  );
 
   const handleDelete = useCallback((index: number) => {
     console.log(`Delete index ${index}`);
