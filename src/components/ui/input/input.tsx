@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import type { LucideProps } from "lucide-react";
 import type React from "react";
 import { useEffect, useId, useRef } from "react";
@@ -8,13 +9,14 @@ interface InputProps {
   type: "text" | "email" | "password";
   name: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   autoFocus?: boolean;
   rightAccessoryIcon?: React.ComponentType<LucideProps>;
   rightAccessoryAction?: (ref: HTMLInputElement) => void;
   rightAccessoryLabel?: string;
   error?: string | string[];
+  disabled?: boolean;
 }
 
 export function Input(props: InputProps) {
@@ -60,9 +62,16 @@ export function Input(props: InputProps) {
           value={props.value}
           onChange={props.onChange}
           placeholder={props.placeholder}
-          className={`w-full rounded-lg border bg-secondary-3 py-2 placeholder-secondary-4 outline-none focus:border-white ${props.icon ? "pl-10" : "pl-3"} ${props.rightAccessoryIcon ? "pr-10" : "pr-3"} text-white ${props.error ? "border-red-400" : "border-transparent"} `}
+          className={cn(
+            "w-full rounded-lg border border-transparent bg-secondary-3 py-2 text-white placeholder-secondary-4 outline-none focus:border-white",
+            props.icon ? "pl-10" : "pl-3",
+            props.rightAccessoryIcon ? "pr-10" : "pr-3",
+            props.error && "border-red-400",
+            props.disabled && "cursor-not-allowed opacity-50",
+          )}
           aria-invalid={props.error ? "true" : "false"}
           aria-describedby={props.error ? errorId : undefined}
+          disabled={props.disabled}
         />
 
         {props.rightAccessoryIcon && (
