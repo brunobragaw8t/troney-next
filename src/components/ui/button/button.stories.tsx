@@ -82,20 +82,21 @@ export const WithIcon: Story = {
 };
 
 export const WithTooltip: Story = {
+  parameters: {
+    layout: "centered",
+  },
   args: {
     type: "button",
     label: "Hover me",
     variant: "primary",
     tooltip: "This is a tooltip",
   },
-  render: (args) => (
-    <div className="flex justify-center p-10">
-      <Button {...args} />,
-    </div>
-  ),
 };
 
 export const WithKeymapTooltip: Story = {
+  parameters: {
+    layout: "centered",
+  },
   args: {
     type: "button",
     label: "Hover me",
@@ -106,9 +107,4 @@ export const WithKeymapTooltip: Story = {
       </>
     ),
   },
-  render: (args) => (
-    <div className="flex justify-center p-10">
-      <Button {...args} />,
-    </div>
-  ),
 };
