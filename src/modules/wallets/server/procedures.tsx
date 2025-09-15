@@ -6,7 +6,7 @@ import {
   protectedProcedure,
 } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import z from "zod";
 
 export const walletsRouter = createTRPCRouter({
@@ -14,7 +14,8 @@ export const walletsRouter = createTRPCRouter({
     return await db
       .select()
       .from(wallets)
-      .where(eq(wallets.userId, ctx.session.userId));
+      .where(eq(wallets.userId, ctx.session.userId))
+      .orderBy(asc(sql`LOWER(${wallets.name})`));
   }),
 
   getWallet: protectedProcedure
