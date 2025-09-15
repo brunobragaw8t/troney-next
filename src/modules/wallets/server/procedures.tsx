@@ -92,4 +92,24 @@ export const walletsRouter = createTRPCRouter({
 
       return wallet;
     }),
+
+  deleteWallet: protectedProcedure
+    .input(z.string().uuid())
+    .mutation(async ({ ctx, input }) => {
+      const [wallet] = await db
+        .delete(wallets)
+        .where(
+          and(eq(wallets.id, input), eq(wallets.userId, ctx.session.userId)),
+        )
+        .returning();
+
+      if (!wallet) {
+        throw new TRPCError({
+          message: `Wallet ${input} not found`,
+          code: "NOT_FOUND",
+        });
+      }
+
+      return wallet;
+    }),
 });
