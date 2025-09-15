@@ -71,7 +71,9 @@ export function Button(props: Props) {
   );
 
   const content = (
-    <div className={cn("flex items-center", sizeStyles[size].text)}>
+    <div
+      className={cn("flex items-center justify-center", sizeStyles[size].text)}
+    >
       {props.iconPosition === "left" && props.icon && (
         <props.icon size={sizeStyles[size].icon} />
       )}
