@@ -51,12 +51,27 @@ export const wallets = pgTable("wallets", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
 });
 
+export const categories = pgTable("categories", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 255 }).notNull(),
+  color: varchar("color", { length: 7 }).notNull().default("#3b82f6"),
+  icon: varchar("icon", { length: 255 }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
+});
+
 export const usersRelations = relations(users, ({ one, many }) => ({
   activationToken: one(activationTokens, {
     fields: [users.id],
     references: [activationTokens.userId],
   }),
   wallets: many(wallets),
+  categories: many(categories),
 }));
 
 export const activationTokensRelations = relations(
@@ -72,6 +87,13 @@ export const activationTokensRelations = relations(
 export const walletsRelations = relations(wallets, ({ one }) => ({
   user: one(users, {
     fields: [wallets.userId],
+    references: [users.id],
+  }),
+}));
+
+export const categoriesRelations = relations(categories, ({ one }) => ({
+  user: one(users, {
+    fields: [categories.userId],
     references: [users.id],
   }),
 }));
