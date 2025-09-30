@@ -1,6 +1,6 @@
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { db } from "@/db";
-import { users, activationTokens, wallets } from "@/db/schema";
+import { users, activationTokens, wallets, categories } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
@@ -166,6 +166,74 @@ export const authRouter = createTRPCRouter({
             userId: data.userId,
             name: "Cash",
             balance: "0.00",
+          },
+        ]),
+        db.insert(categories).values([
+          {
+            userId: data.userId,
+            name: "Food",
+            icon: "🥗",
+            color: "#10b981",
+          },
+          {
+            userId: data.userId,
+            name: "Transport",
+            icon: "🚗",
+            color: "#3b82f6",
+          },
+          {
+            userId: data.userId,
+            name: "Entertainment",
+            icon: "🍿",
+            color: "#f59e0b",
+          },
+          {
+            userId: data.userId,
+            name: "Clothing",
+            icon: "👕",
+            color: "#8b5cf6",
+          },
+          {
+            userId: data.userId,
+            name: "Hygiene",
+            icon: "🧴",
+            color: "#06b6d4",
+          },
+          {
+            userId: data.userId,
+            name: "Health",
+            icon: "🩺",
+            color: "#ef4444",
+          },
+          {
+            userId: data.userId,
+            name: "Education",
+            icon: "🎓",
+            color: "#6366f1",
+          },
+          {
+            userId: data.userId,
+            name: "Bills",
+            icon: "🧾",
+            color: "#64748b",
+          },
+          {
+            userId: data.userId,
+            name: "House",
+            icon: "🏠",
+            color: "#d97706",
+          },
+          {
+            userId: data.userId,
+            name: "Investments",
+            icon: "📈",
+            color: "#059669",
+          },
+          {
+            userId: data.userId,
+            name: "Other",
+            icon: "❓",
+            color: "#6b7280",
           },
         ]),
         db
