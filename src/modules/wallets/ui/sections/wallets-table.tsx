@@ -95,7 +95,7 @@ export function WalletsTable() {
           {wallets.map((wallet, index) => (
             <TableRow key={wallet.id} rowIndex={index} actions={actions}>
               <TableHeader>{wallet.name}</TableHeader>
-              <TableCell>${wallet.balance}</TableCell>
+              <TableCell>{wallet.balance}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button
