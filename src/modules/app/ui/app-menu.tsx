@@ -8,6 +8,7 @@ import {
   ArrowLeftRight,
   Wallet,
   Folder,
+  PackageOpen,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Keymap } from "@/components/ui/keymap/keymap";
@@ -48,6 +49,12 @@ export function AppMenu() {
         icon: Wallet,
         label: "Wallets",
         keymap: "w",
+      },
+      {
+        href: "/buckets",
+        icon: PackageOpen,
+        label: "Buckets",
+        keymap: "b",
       },
       {
         href: "/categories",
