@@ -51,6 +51,20 @@ export const wallets = pgTable("wallets", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
 });
 
+export const buckets = pgTable("buckets", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 255 }).notNull(),
+  budget: decimal("budget", { precision: 10, scale: 2 }).notNull().default("0"),
+  type: varchar("type", { length: 10 }).notNull().default("absolute"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
+});
+
 export const categories = pgTable("categories", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
@@ -71,6 +85,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     references: [activationTokens.userId],
   }),
   wallets: many(wallets),
+  buckets: many(buckets),
   categories: many(categories),
 }));
 
@@ -87,6 +102,13 @@ export const activationTokensRelations = relations(
 export const walletsRelations = relations(wallets, ({ one }) => ({
   user: one(users, {
     fields: [wallets.userId],
+    references: [users.id],
+  }),
+}));
+
+export const bucketsRelations = relations(buckets, ({ one }) => ({
+  user: one(users, {
+    fields: [buckets.userId],
     references: [users.id],
   }),
 }));
