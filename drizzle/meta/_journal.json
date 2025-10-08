@@ -43,6 +43,13 @@
       "when": 1759867008921,
       "tag": "0005_amused_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1759955115823,
+      "tag": "0006_motionless_electro",
+      "breakpoints": true
     }
   ]
 }
