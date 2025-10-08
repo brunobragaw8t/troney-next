@@ -3,6 +3,8 @@ import type { LucideProps } from "lucide-react";
 import { ChevronDown } from "lucide-react";
 import type React from "react";
 import { useEffect, useId, useRef } from "react";
+import { FieldLabel } from "../field-label/field-label";
+import { FieldErrors } from "../field-errors/field-errors";
 
 export interface SelectOption {
   value: string;
@@ -38,14 +40,7 @@ export function Select(props: SelectProps) {
 
   return (
     <div>
-      {props.label && (
-        <label
-          htmlFor={id}
-          className="mb-2 block text-sm font-medium text-white"
-        >
-          {props.label}
-        </label>
-      )}
+      {props.label && <FieldLabel htmlFor={id} label={props.label} />}
 
       <div className="relative">
         {props.icon && (
@@ -90,17 +85,7 @@ export function Select(props: SelectProps) {
         </div>
       </div>
 
-      {props.error && (
-        <p id={errorId} className="mt-1 text-xs text-red-400">
-          {Array.isArray(props.error)
-            ? props.error.map((e) => (
-                <span className="block" key={e}>
-                  {e}
-                </span>
-              ))
-            : props.error}
-        </p>
-      )}
+      <FieldErrors id={errorId} error={props.error} />
     </div>
   );
 }
