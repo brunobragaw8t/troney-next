@@ -1,6 +1,12 @@
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { db } from "@/db";
-import { users, activationTokens, wallets, categories } from "@/db/schema";
+import {
+  users,
+  activationTokens,
+  wallets,
+  categories,
+  buckets,
+} from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
@@ -166,6 +172,33 @@ export const authRouter = createTRPCRouter({
             userId: data.userId,
             name: "Cash",
             balance: "0.00",
+          },
+        ]),
+        db.insert(buckets).values([
+          {
+            userId: data.userId,
+            name: "Necessities",
+            budget: "60.00",
+          },
+          {
+            userId: data.userId,
+            name: "Investing",
+            budget: "10.00",
+          },
+          {
+            userId: data.userId,
+            name: "Learning",
+            budget: "10.00",
+          },
+          {
+            userId: data.userId,
+            name: "Emergency",
+            budget: "10.00",
+          },
+          {
+            userId: data.userId,
+            name: "Fun",
+            budget: "10.00",
           },
         ]),
         db.insert(categories).values([
