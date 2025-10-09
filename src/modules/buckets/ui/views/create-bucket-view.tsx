@@ -4,10 +4,9 @@ import { Alert, AlertProps } from "@/components/ui/alert/alert";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
 import { Select } from "@/components/ui/select/select";
-// import { Select } from "@/components/ui/select/select";
 import { useTRPC } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Euro, PackageOpen, Percent } from "lucide-react";
+import { ArrowLeft, PackageOpen, Percent } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -28,12 +27,6 @@ export function CreateBucketView() {
     if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
       setBudget(value);
     }
-  }
-
-  const [type, setType] = useState<"absolute" | "percentage">("percentage");
-
-  function handleTypeChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    setType(event.target.value as "absolute" | "percentage");
   }
 
   const [loading, setLoading] = useState(false);
@@ -83,18 +76,12 @@ export function CreateBucketView() {
     createBucketMutation.mutate({
       name: name.trim(),
       budget: parseFloat(budget) || 0,
-      type,
     });
   }
 
   function handleGoBack() {
     router.replace("/buckets");
   }
-
-  const typeOptions = [
-    { value: "percentage", label: "Percentage (%)" },
-    { value: "absolute", label: "Absolute (€)" },
-  ];
 
   return (
     <div>
@@ -133,25 +120,14 @@ export function CreateBucketView() {
 
           <Input
             label="Budget"
-            icon={type === "percentage" ? Percent : Euro}
+            icon={Percent}
             type="text"
             name="budget"
             value={budget}
             onChange={handleBudgetChange}
-            placeholder={type === "percentage" ? "10" : "500.00"}
+            placeholder="10"
             error={
               createBucketMutation.error?.data?.zodError?.fieldErrors?.budget
-            }
-          />
-
-          <Select
-            label="Type"
-            name="type"
-            value={type}
-            onChange={handleTypeChange}
-            options={typeOptions}
-            error={
-              createBucketMutation.error?.data?.zodError?.fieldErrors?.type
             }
           />
 

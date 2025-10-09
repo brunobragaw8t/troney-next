@@ -58,7 +58,6 @@ export const buckets = pgTable("buckets", {
     .references(() => users.id, { onDelete: "cascade" }),
   name: varchar("name", { length: 255 }).notNull(),
   budget: decimal("budget", { precision: 10, scale: 2 }).notNull().default("0"),
-  type: varchar("type", { length: 10 }).notNull().default("percentage"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

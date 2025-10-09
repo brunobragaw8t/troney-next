@@ -113,11 +113,7 @@ export function BucketsTable() {
           {buckets.map((bucket, index) => (
             <TableRow key={bucket.id} rowIndex={index} actions={actions}>
               <TableHeader>{bucket.name}</TableHeader>
-              <TableCell>
-                {bucket.type === "percentage"
-                  ? `${bucket.budget} %`
-                  : `${bucket.budget}`}
-              </TableCell>
+              <TableCell>{bucket.budget} %</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button

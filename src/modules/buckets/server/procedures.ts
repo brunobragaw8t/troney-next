@@ -46,8 +46,11 @@ export const bucketsRouter = createTRPCRouter({
           .min(1, "Name is required")
           .max(255, "Name must be 255 characters or less")
           .trim(),
-        budget: z.number().min(0, "Budget must be 0 or greater").default(0),
-        type: z.enum(["absolute", "percentage"]).default("absolute"),
+        budget: z
+          .number()
+          .min(0, "Budget must be 0 or greater")
+          .max(100, "Budget must be 100 or less")
+          .default(0),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -57,7 +60,6 @@ export const bucketsRouter = createTRPCRouter({
           userId: ctx.session.userId,
           name: input.name,
           budget: input.budget.toString(),
-          type: input.type,
         })
         .returning();
 
@@ -73,8 +75,10 @@ export const bucketsRouter = createTRPCRouter({
           .min(1, "Name is required")
           .max(255, "Name must be 255 characters or less")
           .trim(),
-        budget: z.number().min(0, "Budget must be 0 or greater"),
-        type: z.enum(["absolute", "percentage"]),
+        budget: z
+          .number()
+          .min(0, "Budget must be 0 or greater")
+          .max(100, "Budget must be 100 or less"),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -83,7 +87,6 @@ export const bucketsRouter = createTRPCRouter({
         .set({
           name: input.name,
           budget: input.budget.toString(),
-          type: input.type,
         })
         .where(
           and(eq(buckets.id, input.id), eq(buckets.userId, ctx.session.userId)),
