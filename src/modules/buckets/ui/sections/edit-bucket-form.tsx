@@ -3,7 +3,6 @@
 import { Alert, AlertProps } from "@/components/ui/alert/alert";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
-import { Select } from "@/components/ui/select/select";
 import { useTRPC } from "@/trpc/client";
 import {
   useMutation,
