@@ -1,5 +1,6 @@
 import "dotenv/config";
 import {
+  date,
   decimal,
   pgTable,
   timestamp,
@@ -78,6 +79,25 @@ export const categories = pgTable("categories", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
 });
 
+export const earnings = pgTable("earnings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  walletId: uuid("wallet_id").references(() => wallets.id, {
+    onDelete: "set null",
+  }),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: varchar("description", { length: 255 }).notNull(),
+  value: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  source: varchar("source", { length: 255 }).notNull(),
+  date: date("date").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
+});
+
 export const usersRelations = relations(users, ({ one, many }) => ({
   activationToken: one(activationTokens, {
     fields: [users.id],
@@ -86,6 +106,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   wallets: many(wallets),
   buckets: many(buckets),
   categories: many(categories),
+  earnings: many(earnings),
 }));
 
 export const activationTokensRelations = relations(
@@ -98,11 +119,12 @@ export const activationTokensRelations = relations(
   }),
 );
 
-export const walletsRelations = relations(wallets, ({ one }) => ({
+export const walletsRelations = relations(wallets, ({ one, many }) => ({
   user: one(users, {
     fields: [wallets.userId],
     references: [users.id],
   }),
+  earnings: many(earnings),
 }));
 
 export const bucketsRelations = relations(buckets, ({ one }) => ({
@@ -116,5 +138,16 @@ export const categoriesRelations = relations(categories, ({ one }) => ({
   user: one(users, {
     fields: [categories.userId],
     references: [users.id],
+  }),
+}));
+
+export const earningsRelations = relations(earnings, ({ one, many }) => ({
+  user: one(users, {
+    fields: [earnings.userId],
+    references: [users.id],
+  }),
+  wallet: one(wallets, {
+    fields: [earnings.walletId],
+    references: [wallets.id],
   }),
 }));

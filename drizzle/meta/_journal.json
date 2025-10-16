@@ -57,6 +57,13 @@
       "when": 1760043161077,
       "tag": "0007_outgoing_hannibal_king",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1760644576662,
+      "tag": "0008_clear_namorita",
+      "breakpoints": true
     }
   ]
 }
