@@ -64,6 +64,13 @@
       "when": 1760644576662,
       "tag": "0008_clear_namorita",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1760732335597,
+      "tag": "0009_cheerful_lyja",
+      "breakpoints": true
     }
   ]
 }
