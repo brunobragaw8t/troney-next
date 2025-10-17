@@ -35,11 +35,15 @@ export function BucketsTable() {
     trpc.buckets.getBuckets.queryOptions(),
   );
 
-  const total = useMemo(() => {
+  const budgetTotal = useMemo(() => {
     return buckets.reduce((acc, bucket) => acc + Number(bucket.budget), 0);
   }, [buckets]);
 
-  const isTotal100 = total === 100;
+  const isBudgetTotal100 = budgetTotal === 100;
+
+  const balanceTotal = useMemo(() => {
+    return buckets.reduce((acc, bucket) => acc + Number(bucket.balance), 0);
+  }, [buckets]);
 
   const deleteBucketMutation = useMutation(
     trpc.buckets.deleteBucket.mutationOptions({
@@ -93,19 +97,23 @@ export function BucketsTable() {
           <TableRow>
             <TableHeader>Name</TableHeader>
             <TableHeader>Budget</TableHeader>
+            <TableHeader>Balance</TableHeader>
             <TableHeader>Actions</TableHeader>
           </TableRow>
         </TableHead>
 
         <TableBody>
           <TableRow
-            className={!isTotal100 ? "border-red-500 bg-red-500/10" : ""}
+            className={!isBudgetTotal100 ? "border-red-500 bg-red-500/10" : ""}
           >
-            <TableHeader className={!isTotal100 ? "text-red-400" : ""}>
+            <TableHeader className={!isBudgetTotal100 ? "text-red-400" : ""}>
               Total
             </TableHeader>
-            <TableHeader className={!isTotal100 ? "text-red-400" : ""}>
-              {total} %
+            <TableHeader className={!isBudgetTotal100 ? "text-red-400" : ""}>
+              {budgetTotal.toFixed(2)} %
+            </TableHeader>
+            <TableHeader className={!isBudgetTotal100 ? "text-red-400" : ""}>
+              {balanceTotal.toFixed(2)} €
             </TableHeader>
             <TableCell></TableCell>
           </TableRow>
@@ -114,6 +122,7 @@ export function BucketsTable() {
             <TableRow key={bucket.id} rowIndex={index} actions={actions}>
               <TableHeader>{bucket.name}</TableHeader>
               <TableCell>{bucket.budget} %</TableCell>
+              <TableCell>{bucket.balance} €</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button

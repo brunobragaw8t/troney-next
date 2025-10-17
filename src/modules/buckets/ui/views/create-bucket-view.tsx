@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input/input";
 import { Select } from "@/components/ui/select/select";
 import { useTRPC } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowLeft, PackageOpen, Percent } from "lucide-react";
+import { ArrowLeft, Euro, PackageOpen, Percent } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -26,6 +26,16 @@ export function CreateBucketView() {
 
     if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
       setBudget(value);
+    }
+  }
+
+  const [balance, setBalance] = useState("0");
+
+  function handleBalanceChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const value = event.target.value;
+
+    if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
+      setBalance(value);
     }
   }
 
@@ -76,6 +86,7 @@ export function CreateBucketView() {
     createBucketMutation.mutate({
       name: name.trim(),
       budget: parseFloat(budget) || 0,
+      balance: parseFloat(balance) || 0,
     });
   }
 
@@ -128,6 +139,19 @@ export function CreateBucketView() {
             placeholder="10"
             error={
               createBucketMutation.error?.data?.zodError?.fieldErrors?.budget
+            }
+          />
+
+          <Input
+            label="Initial balance"
+            icon={Euro}
+            type="text"
+            name="balance"
+            value={balance}
+            onChange={handleBalanceChange}
+            placeholder="0"
+            error={
+              createBucketMutation.error?.data?.zodError?.fieldErrors?.balance
             }
           />
 
