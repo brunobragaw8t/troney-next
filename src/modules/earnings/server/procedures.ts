@@ -37,7 +37,7 @@ export const earningsRouter = createTRPCRouter({
   createEarning: protectedProcedure
     .input(
       z.object({
-        walletId: z.string().uuid().optional(),
+        walletId: z.string().uuid(),
         title: z
           .string()
           .min(1, "Title is required")
