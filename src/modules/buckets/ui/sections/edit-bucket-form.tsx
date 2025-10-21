@@ -9,7 +9,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { PackageOpen, Percent } from "lucide-react";
+import { Euro, PackageOpen, Percent } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -38,6 +38,18 @@ export function EditBucketForm() {
 
     if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
       setBudget(value);
+    }
+  }
+
+  const [initialBalance, setInitialBalance] = useState("0");
+
+  function handleInitialBalanceChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const value = event.target.value;
+
+    if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
+      setInitialBalance(value);
     }
   }
 
@@ -91,6 +103,7 @@ export function EditBucketForm() {
       id: bucketId,
       name: name.trim(),
       budget: parseFloat(budget) || 0,
+      initialBalance: parseFloat(initialBalance) || 0,
     });
   }
 
@@ -123,6 +136,20 @@ export function EditBucketForm() {
           placeholder="10"
           error={
             updateBucketMutation.error?.data?.zodError?.fieldErrors?.budget
+          }
+        />
+
+        <Input
+          label="Initial balance"
+          icon={Euro}
+          type="text"
+          name="initial_balance"
+          value={initialBalance}
+          onChange={handleInitialBalanceChange}
+          placeholder="0"
+          error={
+            updateBucketMutation.error?.data?.zodError?.fieldErrors
+              ?.initialBalance
           }
         />
 

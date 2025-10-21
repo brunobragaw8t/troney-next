@@ -42,7 +42,10 @@ export function BucketsTable() {
   const isBudgetTotal100 = budgetTotal === 100;
 
   const balanceTotal = useMemo(() => {
-    return buckets.reduce((acc, bucket) => acc + Number(bucket.balance), 0);
+    return buckets.reduce(
+      (acc, bucket) => acc + Number(bucket.initialBalance),
+      0,
+    );
   }, [buckets]);
 
   const deleteBucketMutation = useMutation(
@@ -122,7 +125,7 @@ export function BucketsTable() {
             <TableRow key={bucket.id} rowIndex={index} actions={actions}>
               <TableHeader>{bucket.name}</TableHeader>
               <TableCell>{bucket.budget} %</TableCell>
-              <TableCell>{bucket.balance} €</TableCell>
+              <TableCell>{bucket.initialBalance} €</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button
