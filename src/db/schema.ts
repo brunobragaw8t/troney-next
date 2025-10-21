@@ -92,7 +92,7 @@ export const earnings = pgTable("earnings", {
   }),
   title: varchar("title", { length: 255 }).notNull(),
   description: varchar("description", { length: 255 }).notNull(),
-  value: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  value: decimal("value", { precision: 10, scale: 2 }).notNull(),
   source: varchar("source", { length: 255 }).notNull(),
   date: date("date").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })

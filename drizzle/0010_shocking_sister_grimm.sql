@@ -1,0 +1,1 @@
+ALTER TABLE "earnings" RENAME COLUMN "amount" TO "value";
