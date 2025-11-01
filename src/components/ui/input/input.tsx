@@ -8,7 +8,7 @@ import { FieldErrors } from "../field-errors/field-errors";
 interface InputProps {
   label?: string;
   icon?: React.ComponentType<LucideProps>;
-  type: "text" | "email" | "password";
+  type: "text" | "email" | "password" | "date";
   name: string;
   value: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
