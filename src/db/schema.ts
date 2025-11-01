@@ -101,6 +101,25 @@ export const earnings = pgTable("earnings", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
 });
 
+export const earningAllocations = pgTable("earning_allocations", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  earningId: uuid("earning_id")
+    .notNull()
+    .references(() => earnings.id, { onDelete: "cascade" }),
+  bucketId: uuid("bucket_id").references(() => buckets.id, {
+    onDelete: "cascade",
+  }),
+  value: decimal("value", { precision: 10, scale: 2 }).notNull(),
+  bucketPercentage: decimal("bucket_percentage", {
+    precision: 10,
+    scale: 2,
+  }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
+});
+
 export const usersRelations = relations(users, ({ one, many }) => ({
   activationToken: one(activationTokens, {
     fields: [users.id],
@@ -154,3 +173,17 @@ export const earningsRelations = relations(earnings, ({ one, many }) => ({
     references: [wallets.id],
   }),
 }));
+
+export const earningAllocationsRelations = relations(
+  earningAllocations,
+  ({ one }) => ({
+    earning: one(earnings, {
+      fields: [earningAllocations.earningId],
+      references: [earnings.id],
+    }),
+    bucket: one(buckets, {
+      fields: [earningAllocations.bucketId],
+      references: [buckets.id],
+    }),
+  }),
+);
