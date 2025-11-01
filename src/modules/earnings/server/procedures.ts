@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { earnings, buckets } from "@/db/schema";
+import { earnings, buckets, earningAllocations, wallets } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
@@ -8,8 +8,21 @@ import z from "zod";
 export const earningsRouter = createTRPCRouter({
   getEarnings: protectedProcedure.query(async ({ ctx }) => {
     return await db
-      .select()
+      .select({
+        id: earnings.id,
+        userId: earnings.userId,
+        walletId: earnings.walletId,
+        title: earnings.title,
+        description: earnings.description,
+        value: earnings.value,
+        source: earnings.source,
+        date: earnings.date,
+        createdAt: earnings.createdAt,
+        updatedAt: earnings.updatedAt,
+        walletName: wallets.name,
+      })
       .from(earnings)
+      .leftJoin(wallets, eq(earnings.walletId, wallets.id))
       .where(eq(earnings.userId, ctx.session.userId))
       .orderBy(desc(earnings.date));
   }),
@@ -37,7 +50,9 @@ export const earningsRouter = createTRPCRouter({
   createEarning: protectedProcedure
     .input(
       z.object({
-        walletId: z.string().uuid(),
+        walletId: z
+          .string()
+          .uuid("Please select in which wallet the earning will be stored"),
         title: z
           .string()
           .min(1, "Title is required")
@@ -45,7 +60,6 @@ export const earningsRouter = createTRPCRouter({
           .trim(),
         description: z
           .string()
-          .min(1, "Description is required")
           .max(255, "Description must be 255 characters or less")
           .trim(),
         value: z
@@ -56,11 +70,28 @@ export const earningsRouter = createTRPCRouter({
           .string()
           .max(100, "Source must be 100 characters or less")
           .trim(),
-        date: z.date().max(new Date(), "Date must be in the past"),
+        date: z.coerce.date().max(new Date(), "Date must be in the past"),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       return await db.transaction(async (tx) => {
+        const [wallet] = await tx
+          .select()
+          .from(wallets)
+          .where(
+            and(
+              eq(wallets.id, input.walletId),
+              eq(wallets.userId, ctx.session.userId),
+            ),
+          );
+
+        if (!wallet) {
+          throw new TRPCError({
+            message: `Wallet ${input.walletId} not found`,
+            code: "NOT_FOUND",
+          });
+        }
+
         const userBuckets = await tx
           .select()
           .from(buckets)
@@ -91,30 +122,47 @@ export const earningsRouter = createTRPCRouter({
           .insert(earnings)
           .values({
             userId: ctx.session.userId,
+            walletId: input.walletId,
             title: input.title,
             description: input.description,
             value: input.value.toString(),
             source: input.source,
-            date: input.date.toString(),
+            date: input.date.toISOString().split("T")[0],
           })
           .returning();
 
-        await Promise.all(
-          userBuckets.map((bucket) => {
-            const bucketPercentage = parseFloat(bucket.budget) / 100;
-            const distributionAmount = input.value * bucketPercentage;
+        const newWalletBalance = parseFloat(wallet.balance) + input.value;
 
-            return tx
-              .update(buckets)
-              .set({
-                balance: bucket.balance + distributionAmount,
-              })
-              .where(eq(buckets.id, bucket.id));
-          }),
-        );
+        await tx
+          .update(wallets)
+          .set({ balance: newWalletBalance.toString() })
+          .where(eq(wallets.id, input.walletId));
+
+        const allocationsAndBucketBalanceUpdates = userBuckets
+          .map((bucket) => {
+            const bucketAllocationPercentage = parseFloat(bucket.budget) / 100;
+            const allocationValue = input.value * bucketAllocationPercentage;
+            const newBucketBalance =
+              parseFloat(bucket.balance) + allocationValue;
+
+            return [
+              tx.insert(earningAllocations).values({
+                earningId: earning.id,
+                bucketId: bucket.id,
+                value: allocationValue.toString(),
+                bucketPercentage: bucket.budget,
+              }),
+              tx
+                .update(buckets)
+                .set({ balance: newBucketBalance.toString() })
+                .where(eq(buckets.id, bucket.id)),
+            ];
+          })
+          .flat();
+
+        await Promise.all(allocationsAndBucketBalanceUpdates);
 
         return earning;
       });
     }),
-
 });
