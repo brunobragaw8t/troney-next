@@ -2,13 +2,28 @@
 
 import { Button } from "@/components/ui/button/button";
 import { Spinner } from "@/components/ui/spinner/spinner";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { ArrowLeft } from "lucide-react";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { EditCategoryForm } from "../sections/edit-category-form";
 import { useRouter } from "next/navigation";
 
 export function EditCategoryView() {
   const router = useRouter();
+
+  useKeyboardShortcuts({
+    shortcuts: useMemo(
+      () => [
+        {
+          key: "Escape",
+          action: () => {
+            router.replace("/categories");
+          },
+        },
+      ],
+      [router],
+    ),
+  });
 
   function handleGoBack() {
     router.replace("/categories");

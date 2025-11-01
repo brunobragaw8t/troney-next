@@ -15,9 +15,10 @@ export function useKeyboardShortcuts({
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (
-        document.activeElement instanceof HTMLInputElement ||
-        document.activeElement instanceof HTMLTextAreaElement ||
-        document.activeElement instanceof HTMLSelectElement
+        event.key !== "Escape" &&
+        (document.activeElement instanceof HTMLInputElement ||
+          document.activeElement instanceof HTMLTextAreaElement ||
+          document.activeElement instanceof HTMLSelectElement)
       ) {
         return;
       }

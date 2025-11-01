@@ -2,13 +2,28 @@
 
 import { Button } from "@/components/ui/button/button";
 import { Spinner } from "@/components/ui/spinner/spinner";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { ArrowLeft } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import { EditWalletForm } from "../sections/edit-wallet-form";
 import { useRouter } from "next/navigation";
 
 export function EditWalletView() {
   const router = useRouter();
+
+  useKeyboardShortcuts({
+    shortcuts: useMemo(
+      () => [
+        {
+          key: "Escape",
+          action: () => {
+            router.replace("/wallets");
+          },
+        },
+      ],
+      [router],
+    ),
+  });
 
   function handleGoBack() {
     router.replace("/wallets");

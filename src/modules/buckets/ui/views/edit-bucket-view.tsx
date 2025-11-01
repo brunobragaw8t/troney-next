@@ -2,13 +2,28 @@
 
 import { Button } from "@/components/ui/button/button";
 import { Spinner } from "@/components/ui/spinner/spinner";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { ArrowLeft } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import { EditBucketForm } from "../sections/edit-bucket-form";
 import { useRouter } from "next/navigation";
 
 export function EditBucketView() {
   const router = useRouter();
+
+  useKeyboardShortcuts({
+    shortcuts: useMemo(
+      () => [
+        {
+          key: "Escape",
+          action: () => {
+            router.replace("/buckets");
+          },
+        },
+      ],
+      [router],
+    ),
+  });
 
   function handleGoBack() {
     router.replace("/buckets");

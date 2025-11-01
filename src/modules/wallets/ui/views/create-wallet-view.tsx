@@ -3,14 +3,29 @@
 import { Alert, AlertProps } from "@/components/ui/alert/alert";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { useTRPC } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Euro, Wallet } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export function CreateWalletView() {
   const router = useRouter();
+
+  useKeyboardShortcuts({
+    shortcuts: useMemo(
+      () => [
+        {
+          key: "Escape",
+          action: () => {
+            router.replace("/wallets");
+          },
+        },
+      ],
+      [router],
+    ),
+  });
 
   const [name, setName] = useState("");
 
