@@ -41,18 +41,6 @@ export function EditBucketForm() {
     }
   }
 
-  const [initialBalance, setInitialBalance] = useState("0");
-
-  function handleInitialBalanceChange(
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    const value = event.target.value;
-
-    if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
-      setInitialBalance(value);
-    }
-  }
-
   const [loading, setLoading] = useState(false);
 
   const [alert, setAlert] = useState<AlertProps>({
@@ -103,7 +91,6 @@ export function EditBucketForm() {
       id: bucketId,
       name: name.trim(),
       budget: parseFloat(budget) || 0,
-      initialBalance: parseFloat(initialBalance) || 0,
     });
   }
 
@@ -136,20 +123,6 @@ export function EditBucketForm() {
           placeholder="10"
           error={
             updateBucketMutation.error?.data?.zodError?.fieldErrors?.budget
-          }
-        />
-
-        <Input
-          label="Initial balance"
-          icon={Euro}
-          type="text"
-          name="initial_balance"
-          value={initialBalance}
-          onChange={handleInitialBalanceChange}
-          placeholder="0"
-          error={
-            updateBucketMutation.error?.data?.zodError?.fieldErrors
-              ?.initialBalance
           }
         />
 

@@ -59,7 +59,7 @@ export const buckets = pgTable("buckets", {
     .references(() => users.id, { onDelete: "cascade" }),
   name: varchar("name", { length: 255 }).notNull(),
   budget: decimal("budget", { precision: 10, scale: 2 }).notNull().default("0"),
-  initialBalance: decimal("initial_balance", { precision: 10, scale: 2 })
+  balance: decimal("balance", { precision: 10, scale: 2 })
     .notNull()
     .default("0"),
   createdAt: timestamp("created_at", { withTimezone: true })

@@ -29,15 +29,13 @@ export function CreateBucketView() {
     }
   }
 
-  const [initialBalance, setInitialBalance] = useState("0");
+  const [balance, setBalance] = useState("0");
 
-  function handleInitialBalanceChange(
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) {
+  function handleBalanceChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
 
     if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
-      setInitialBalance(value);
+      setBalance(value);
     }
   }
 
@@ -88,7 +86,7 @@ export function CreateBucketView() {
     createBucketMutation.mutate({
       name: name.trim(),
       budget: parseFloat(budget) || 0,
-      initialBalance: parseFloat(initialBalance) || 0,
+      balance: parseFloat(balance) || 0,
     });
   }
 
@@ -148,13 +146,12 @@ export function CreateBucketView() {
             label="Initial balance"
             icon={Euro}
             type="text"
-            name="initial_balance"
-            value={initialBalance}
-            onChange={handleInitialBalanceChange}
+            name="balance"
+            value={balance}
+            onChange={handleBalanceChange}
             placeholder="0"
             error={
-              createBucketMutation.error?.data?.zodError?.fieldErrors
-                ?.initialBalance
+              createBucketMutation.error?.data?.zodError?.fieldErrors?.balance
             }
           />
 

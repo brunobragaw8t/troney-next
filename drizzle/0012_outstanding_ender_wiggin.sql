@@ -1,0 +1,1 @@
+ALTER TABLE "buckets" RENAME COLUMN "initial_balance" TO "balance";

@@ -51,10 +51,7 @@ export const bucketsRouter = createTRPCRouter({
           .min(0, "Budget must be 0 or greater")
           .max(100, "Budget must be 100 or less")
           .default(0),
-        initialBalance: z
-          .number()
-          .min(0, "Initial balance must be 0 or greater")
-          .default(0),
+        balance: z.number().min(0, "Balance must be 0 or greater").default(0),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -64,7 +61,7 @@ export const bucketsRouter = createTRPCRouter({
           userId: ctx.session.userId,
           name: input.name,
           budget: input.budget.toString(),
-          initialBalance: input.initialBalance.toString(),
+          balance: input.balance.toString(),
         })
         .returning();
 
@@ -84,10 +81,6 @@ export const bucketsRouter = createTRPCRouter({
           .number()
           .min(0, "Budget must be 0 or greater")
           .max(100, "Budget must be 100 or less"),
-        initialBalance: z
-          .number()
-          .min(0, "Initial balance must be 0 or greater")
-          .default(0),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -96,7 +89,6 @@ export const bucketsRouter = createTRPCRouter({
         .set({
           name: input.name,
           budget: input.budget.toString(),
-          initialBalance: input.initialBalance.toString(),
         })
         .where(
           and(eq(buckets.id, input.id), eq(buckets.userId, ctx.session.userId)),

@@ -85,6 +85,13 @@
       "when": 1761080986280,
       "tag": "0011_aspiring_jubilee",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1762017855663,
+      "tag": "0012_outstanding_ender_wiggin",
+      "breakpoints": true
     }
   ]
 }
