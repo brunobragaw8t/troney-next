@@ -7,4 +7,8 @@ const jiti = createJiti(fileURLToPath(import.meta.url));
 jiti("./src/env");
 
 /** @type {import('next').NextConfig} */
-export default {};
+export default {
+  devIndicators: {
+    position: "bottom-right",
+  },
+};
