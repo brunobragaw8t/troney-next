@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
 import { Select } from "@/components/ui/select/select";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
+import { isValidFloat } from "@/lib/validation";
 import { useTRPC } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Euro, PackageOpen, Percent } from "lucide-react";
@@ -39,7 +40,7 @@ export function CreateBucketView() {
   function handleBudgetChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
 
-    if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
+    if (value === "" || isValidFloat(value)) {
       setBudget(value);
     }
   }
@@ -49,7 +50,7 @@ export function CreateBucketView() {
   function handleBalanceChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
 
-    if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
+    if (value === "" || isValidFloat(value)) {
       setBalance(value);
     }
   }

@@ -3,6 +3,7 @@
 import { Alert, AlertProps } from "@/components/ui/alert/alert";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
+import { isValidFloat } from "@/lib/validation";
 import { useTRPC } from "@/trpc/client";
 import {
   useMutation,
@@ -36,7 +37,7 @@ export function EditBucketForm() {
   function handleBudgetChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
 
-    if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
+    if (value === "" || isValidFloat(value)) {
       setBudget(value);
     }
   }
