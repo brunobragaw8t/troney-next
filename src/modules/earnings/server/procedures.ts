@@ -351,10 +351,6 @@ export const earningsRouter = createTRPCRouter({
           existingAllocations.flatMap((allocation) => {
             if (!allocation.bucketId) return [];
 
-            const originalBucketPercentage =
-              parseFloat(allocation.bucketPercentage) / 100;
-            const newAllocationValue = newValue * originalBucketPercentage;
-
             const bucket = userBuckets.find(
               (b) => b.id === allocation.bucketId,
             );
@@ -363,8 +359,16 @@ export const earningsRouter = createTRPCRouter({
               return [];
             }
 
+            const originalBucketPercentage =
+              parseFloat(allocation.bucketPercentage) / 100;
+            const originalAllocationValue = parseFloat(allocation.value);
+
+            const newAllocationValue = newValue * originalBucketPercentage;
+            const allocationValueDiff =
+              newAllocationValue - originalAllocationValue;
+
             const newBucketBalance =
-              parseFloat(bucket.balance) + newAllocationValue;
+              parseFloat(bucket.balance) + allocationValueDiff;
 
             return [
               tx
