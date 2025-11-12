@@ -35,15 +35,15 @@ export function EarningsTable() {
     trpc.earnings.getEarnings.queryOptions(),
   );
 
-  // const deleteEarningMutation = useMutation(
-  //   trpc.earnings.deleteEarning.mutationOptions({
-  //     onSuccess: () => {
-  //       queryClient.invalidateQueries(trpc.earnings.getEarnings.queryOptions());
-  //       setDeletionModalOpen(false);
-  //       setEarningToDelete(null);
-  //     },
-  //   }),
-  // );
+  const deleteEarningMutation = useMutation(
+    trpc.earnings.deleteEarning.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(trpc.earnings.getEarnings.queryOptions());
+        setDeletionModalOpen(false);
+        setEarningToDelete(null);
+      },
+    }),
+  );
 
   const handleEdit = useCallback(
     (index: number) => {
@@ -52,35 +52,32 @@ export function EarningsTable() {
     [router, earnings],
   );
 
-  // const handleDelete = useCallback(
-  //   (index: number) => {
-  //     const earning = earnings[index];
-  //     setEarningToDelete({ id: earning.id, description: earning.description });
-  //     setDeletionModalOpen(true);
-  //   },
-  //   [earnings],
-  // );
+  const handleDelete = useCallback(
+    (index: number) => {
+      const earning = earnings[index];
+      setEarningToDelete({ id: earning.id, title: earning.title });
+      setDeletionModalOpen(true);
+    },
+    [earnings],
+  );
 
   const handleCancelDelete = useCallback(() => {
     setDeletionModalOpen(false);
     setEarningToDelete(null);
   }, []);
 
-  // const handleConfirmDelete = useCallback(() => {
-  //   if (earningToDelete) {
-  //     deleteEarningMutation.mutate(earningToDelete.id);
-  //   }
-  // }, [earningToDelete, deleteEarningMutation]);
+  const handleConfirmDelete = useCallback(() => {
+    if (earningToDelete) {
+      deleteEarningMutation.mutate(earningToDelete.id);
+    }
+  }, [earningToDelete, deleteEarningMutation]);
 
   const actions: TableRowActions = useMemo(
     () => ({
       e: handleEdit,
-      // d: handleDelete,
+      d: handleDelete,
     }),
-    [
-      handleEdit,
-      // handleDelete
-    ],
+    [handleEdit, handleDelete],
   );
 
   return (
@@ -125,7 +122,7 @@ export function EarningsTable() {
                     type="button"
                     icon={Trash}
                     iconPosition="left"
-                    onClick={() => {}}
+                    onClick={() => handleDelete(index)}
                     size="sm"
                     variant="danger-ghost"
                     tooltip={
@@ -141,7 +138,7 @@ export function EarningsTable() {
         </TableBody>
       </Table>
 
-      {/*<ConfirmationModal
+      <ConfirmationModal
         isOpen={deletionModalOpen}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
@@ -150,7 +147,7 @@ export function EarningsTable() {
         confirmText="Delete"
         variant="danger-ghost"
         loading={deleteEarningMutation.isPending}
-      />*/}
+      />
     </>
   );
 }

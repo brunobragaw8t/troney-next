@@ -387,4 +387,94 @@ export const earningsRouter = createTRPCRouter({
         return updatedEarning;
       });
     }),
+
+  deleteEarning: protectedProcedure
+    .input(z.string().uuid())
+    .mutation(async ({ ctx, input }) => {
+      return await db.transaction(async (tx) => {
+        const [existingEarning] = await tx
+          .select()
+          .from(earnings)
+          .where(
+            and(
+              eq(earnings.id, input),
+              eq(earnings.userId, ctx.session.userId),
+            ),
+          );
+
+        if (!existingEarning) {
+          throw new TRPCError({
+            message: `Earning ${input} not found`,
+            code: "NOT_FOUND",
+          });
+        }
+
+        const existingAllocations = await tx
+          .select()
+          .from(earningAllocations)
+          .where(eq(earningAllocations.earningId, input));
+
+        const earningValue = parseFloat(existingEarning.value);
+
+        if (existingEarning.walletId) {
+          const [wallet] = await tx
+            .select()
+            .from(wallets)
+            .where(
+              and(
+                eq(wallets.id, existingEarning.walletId),
+                eq(wallets.userId, ctx.session.userId),
+              ),
+            );
+
+          if (wallet) {
+            const updatedWalletBalance =
+              parseFloat(wallet.balance) - earningValue;
+
+            await tx
+              .update(wallets)
+              .set({ balance: updatedWalletBalance.toString() })
+              .where(eq(wallets.id, existingEarning.walletId));
+          }
+        }
+
+        for (const allocation of existingAllocations) {
+          if (!allocation.bucketId) {
+            continue;
+          }
+
+          const [bucket] = await tx
+            .select()
+            .from(buckets)
+            .where(eq(buckets.id, allocation.bucketId));
+
+          if (bucket) {
+            const allocationValue = parseFloat(allocation.value);
+            const updatedBucketBalance =
+              parseFloat(bucket.balance) - allocationValue;
+
+            await tx
+              .update(buckets)
+              .set({ balance: updatedBucketBalance.toString() })
+              .where(eq(buckets.id, allocation.bucketId));
+          }
+        }
+
+        await tx
+          .delete(earningAllocations)
+          .where(eq(earningAllocations.earningId, input));
+
+        const [deletedEarning] = await tx
+          .delete(earnings)
+          .where(
+            and(
+              eq(earnings.id, input),
+              eq(earnings.userId, ctx.session.userId),
+            ),
+          )
+          .returning();
+
+        return deletedEarning;
+      });
+    }),
 });
