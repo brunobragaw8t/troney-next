@@ -5,6 +5,7 @@ import { walletsRouter } from "@/modules/wallets/server/procedures";
 import { categoriesRouter } from "@/modules/categories/server/procedures";
 import { bucketsRouter } from "@/modules/buckets/server/procedures";
 import { earningsRouter } from "@/modules/earnings/server/procedures";
+import { expensesRouter } from "@/modules/expenses/server/procedures";
 
 export const appRouter = createTRPCRouter({
   auth: authRouter,
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   buckets: bucketsRouter,
   categories: categoriesRouter,
   earnings: earningsRouter,
+  expenses: expensesRouter,
 });
 
 // export type definition of API
