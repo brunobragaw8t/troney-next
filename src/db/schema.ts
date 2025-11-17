@@ -120,6 +120,47 @@ export const earningAllocations = pgTable("earning_allocations", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
 });
 
+export const expenses = pgTable("expenses", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  walletId: uuid("wallet_id").references(() => wallets.id, {
+    onDelete: "set null",
+  }),
+  bucketId: uuid("bucket_id").references(() => buckets.id, {
+    onDelete: "cascade",
+  }),
+  categoryId: uuid("category_id").references(() => categories.id, {
+    onDelete: "set null",
+  }),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: varchar("description", { length: 255 }).notNull(),
+  value: decimal("value", { precision: 10, scale: 2 }).notNull(),
+  source: varchar("source", { length: 255 }).notNull(),
+  date: date("date").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
+});
+
+export const expensesRelations = relations(expenses, ({ one }) => ({
+  user: one(users, { fields: [expenses.userId], references: [users.id] }),
+  wallet: one(wallets, {
+    fields: [expenses.walletId],
+    references: [wallets.id],
+  }),
+  bucket: one(buckets, {
+    fields: [expenses.bucketId],
+    references: [buckets.id],
+  }),
+  category: one(categories, {
+    fields: [expenses.categoryId],
+    references: [categories.id],
+  }),
+}));
+
 export const usersRelations = relations(users, ({ one, many }) => ({
   activationToken: one(activationTokens, {
     fields: [users.id],
@@ -163,7 +204,7 @@ export const categoriesRelations = relations(categories, ({ one }) => ({
   }),
 }));
 
-export const earningsRelations = relations(earnings, ({ one, many }) => ({
+export const earningsRelations = relations(earnings, ({ one }) => ({
   user: one(users, {
     fields: [earnings.userId],
     references: [users.id],
