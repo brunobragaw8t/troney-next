@@ -35,6 +35,10 @@ export function WalletsTable() {
     trpc.wallets.getWallets.queryOptions(),
   );
 
+  const balanceTotal = useMemo(() => {
+    return wallets.reduce((acc, wallet) => acc + Number(wallet.balance), 0);
+  }, [wallets]);
+
   const deleteWalletMutation = useMutation(
     trpc.wallets.deleteWallet.mutationOptions({
       onSuccess: () => {
@@ -92,6 +96,12 @@ export function WalletsTable() {
         </TableHead>
 
         <TableBody>
+          <TableRow>
+            <TableHeader>Total</TableHeader>
+            <TableHeader>{balanceTotal.toFixed(2)} €</TableHeader>
+            <TableCell></TableCell>
+          </TableRow>
+
           {wallets.map((wallet, index) => (
             <TableRow key={wallet.id} rowIndex={index} actions={actions}>
               <TableHeader>{wallet.name}</TableHeader>
