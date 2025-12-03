@@ -145,6 +145,25 @@ export const expenses = pgTable("expenses", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
 });
 
+export const movements = pgTable("movements", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  walletIdSource: uuid("wallet_id_source").references(() => wallets.id, {
+    onDelete: "set null",
+  }),
+  walletIdTarget: uuid("wallet_id_target").references(() => wallets.id, {
+    onDelete: "set null",
+  }),
+  value: decimal("value", { precision: 10, scale: 2 }).notNull(),
+  date: date("date").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).default(sql`NULL`),
+});
+
 export const expensesRelations = relations(expenses, ({ one }) => ({
   user: one(users, { fields: [expenses.userId], references: [users.id] }),
   wallet: one(wallets, {
@@ -170,6 +189,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   buckets: many(buckets),
   categories: many(categories),
   earnings: many(earnings),
+  movements: many(movements),
 }));
 
 export const activationTokensRelations = relations(
@@ -188,6 +208,8 @@ export const walletsRelations = relations(wallets, ({ one, many }) => ({
     references: [users.id],
   }),
   earnings: many(earnings),
+  sourceMovements: many(movements, { relationName: "sourceWallet" }),
+  targetMovements: many(movements, { relationName: "targetWallet" }),
 }));
 
 export const bucketsRelations = relations(buckets, ({ one }) => ({
@@ -212,6 +234,20 @@ export const earningsRelations = relations(earnings, ({ one }) => ({
   wallet: one(wallets, {
     fields: [earnings.walletId],
     references: [wallets.id],
+  }),
+}));
+
+export const movementsRelations = relations(movements, ({ one }) => ({
+  user: one(users, { fields: [movements.userId], references: [users.id] }),
+  sourceWallet: one(wallets, {
+    fields: [movements.walletIdSource],
+    references: [wallets.id],
+    relationName: "sourceWallet",
+  }),
+  targetWallet: one(wallets, {
+    fields: [movements.walletIdTarget],
+    references: [wallets.id],
+    relationName: "targetWallet",
   }),
 }));
 
