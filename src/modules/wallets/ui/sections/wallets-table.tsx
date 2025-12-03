@@ -126,7 +126,7 @@ export function WalletsTable() {
                     type="button"
                     icon={Trash}
                     iconPosition="left"
-                    onClick={() => {}}
+                    onClick={() => handleDelete(index)}
                     size="sm"
                     variant="danger-ghost"
                     tooltip={
