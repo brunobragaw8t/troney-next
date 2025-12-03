@@ -1,13 +1,18 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Wallet, TrendingUp, CreditCard, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, PackageOpen, Wallet } from "lucide-react";
 
 export function ControlPanelView() {
   const trpc = useTRPC();
 
   const { data: wallets } = useSuspenseQuery(
     trpc.wallets.getWallets.queryOptions(),
+  );
+
+  const { data: buckets } = useSuspenseQuery(
+    trpc.buckets.getBuckets.queryOptions(),
   );
 
   const totalBalance = wallets.reduce(
@@ -91,6 +96,43 @@ export function ControlPanelView() {
                       }}
                     />
                   </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-medium text-secondary-4">
+            <PackageOpen className="h-5 w-5 text-primary-1" />
+            Your buckets
+          </h2>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {buckets.map((bucket, index) => {
+              const balance = parseFloat(bucket.balance);
+
+              return (
+                <div
+                  key={bucket.id}
+                  className="rounded-lg border border-secondary-3/50 bg-gradient-to-br from-secondary-2/50 to-secondary-1/50 p-6"
+                >
+                  <div className="mb-1 flex items-center gap-2">
+                    <div
+                      className={cn("flex size-2 rounded-full bg-primary-1", {
+                        "bg-yellow-500": balance <= 50,
+                        "bg-red-500": balance <= 0,
+                      })}
+                    />
+
+                    <h3 className="truncate text-lg font-semibold text-white">
+                      {bucket.name}
+                    </h3>
+                  </div>
+
+                  <p className="text-2xl font-bold text-primary-1">
+                    {balance.toFixed(2)} €
+                  </p>
                 </div>
               );
             })}

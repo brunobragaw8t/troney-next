@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Page() {
   prefetch(trpc.wallets.getWallets.queryOptions());
+  prefetch(trpc.buckets.getBuckets.queryOptions());
 
   return (
     <HydrateClient>
