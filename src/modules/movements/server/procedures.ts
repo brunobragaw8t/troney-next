@@ -3,26 +3,30 @@ import { movements, wallets } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import z from "zod";
 
 export const movementsRouter = createTRPCRouter({
   getMovements: protectedProcedure.query(async ({ ctx }) => {
+    const sourceWallet = alias(wallets, "sourceWallet");
+    const targetWallet = alias(wallets, "targetWallet");
+
     return await db
       .select({
         id: movements.id,
         userId: movements.userId,
         walletIdSource: movements.walletIdSource,
-        sourceWalletName: wallets.name,
+        sourceWalletName: sourceWallet.name,
         walletIdTarget: movements.walletIdTarget,
-        targetWalletName: wallets.name,
+        targetWalletName: targetWallet.name,
         value: movements.value,
         date: movements.date,
         createdAt: movements.createdAt,
         updatedAt: movements.updatedAt,
       })
       .from(movements)
-      .leftJoin(wallets, eq(movements.walletIdSource, wallets.id))
-      .leftJoin(wallets, eq(movements.walletIdTarget, wallets.id))
+      .leftJoin(sourceWallet, eq(movements.walletIdSource, sourceWallet.id))
+      .leftJoin(targetWallet, eq(movements.walletIdTarget, targetWallet.id))
       .where(eq(movements.userId, ctx.session.userId))
       .orderBy(desc(movements.date));
   }),
