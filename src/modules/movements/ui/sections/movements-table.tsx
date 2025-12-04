@@ -104,9 +104,7 @@ export function MovementsTable() {
           {movements.map((movement, index) => (
             <TableRow key={movement.id} rowIndex={index} actions={actions}>
               <TableCell>{movement.date}</TableCell>
-              <TableHeader>
-                {movement.sourceWalletName || "Unknown"}
-              </TableHeader>
+              <TableCell>{movement.sourceWalletName || "Unknown"}</TableCell>
               <TableCell>{movement.value}</TableCell>
               <TableCell>{movement.targetWalletName || "Unknown"}</TableCell>
               <TableCell>
