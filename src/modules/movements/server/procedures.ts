@@ -177,40 +177,6 @@ export const movementsRouter = createTRPCRouter({
           });
         }
 
-        const [sourceWallet] = await tx
-          .select()
-          .from(wallets)
-          .where(
-            and(
-              eq(wallets.id, input.walletIdSource),
-              eq(wallets.userId, ctx.session.userId),
-            ),
-          );
-
-        if (!sourceWallet) {
-          throw new TRPCError({
-            message: `Source wallet ${input.walletIdSource} not found`,
-            code: "NOT_FOUND",
-          });
-        }
-
-        const [targetWallet] = await tx
-          .select()
-          .from(wallets)
-          .where(
-            and(
-              eq(wallets.id, input.walletIdTarget),
-              eq(wallets.userId, ctx.session.userId),
-            ),
-          );
-
-        if (!targetWallet) {
-          throw new TRPCError({
-            message: `Target wallet ${input.walletIdTarget} not found`,
-            code: "NOT_FOUND",
-          });
-        }
-
         const oldValue = parseFloat(existingMovement.value);
         const newValue = input.value;
 
@@ -249,6 +215,40 @@ export const movementsRouter = createTRPCRouter({
         }
 
         // Apply new movement
+
+        const [sourceWallet] = await tx
+          .select()
+          .from(wallets)
+          .where(
+            and(
+              eq(wallets.id, input.walletIdSource),
+              eq(wallets.userId, ctx.session.userId),
+            ),
+          );
+
+        if (!sourceWallet) {
+          throw new TRPCError({
+            message: `Source wallet ${input.walletIdSource} not found`,
+            code: "NOT_FOUND",
+          });
+        }
+
+        const [targetWallet] = await tx
+          .select()
+          .from(wallets)
+          .where(
+            and(
+              eq(wallets.id, input.walletIdTarget),
+              eq(wallets.userId, ctx.session.userId),
+            ),
+          );
+
+        if (!targetWallet) {
+          throw new TRPCError({
+            message: `Target wallet ${input.walletIdTarget} not found`,
+            code: "NOT_FOUND",
+          });
+        }
 
         const newSourceBalance = parseFloat(sourceWallet.balance) - newValue;
         await tx
