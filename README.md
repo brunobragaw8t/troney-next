@@ -34,15 +34,17 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [ ] Send email when user password changes
 - [ ] Implement refresh session functionality
 - [x] Seed default wallets for user
-- [ ] Create wallets CRUD
-- [ ] Create buckets CRUD
-- [ ] Create categories CRUD
-- [ ] Seed default categories for user
-- [ ] Emoji in categories (to serve as icons when minimized)
-- [ ] Create earnings CRUD
-- [ ] Prevent registering earnings if buckets aren't 100%
-- [ ] Create expenses CRUD
+- [x] Create wallets CRUD
+- [x] Create categories CRUD
+- [x] Seed default categories for user
+- [x] Emoji in categories (to serve as icons when minimized)
+- [x] Create buckets CRUD
+- [x] Seed default buckets for user
+- [x] Create earnings CRUD
+- [x] Prevent registering earnings if buckets aren't 100%
+- [x] Create expenses CRUD
 - [ ] Create movements CRUD
+- [ ] Format currency consistently
 - [ ] Add autocomplete of previously registered expenses, with price
 - [ ] View history of prices
 - [ ] Keyboard navigation in lists
@@ -51,8 +53,9 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [ ] OCR
 - [ ] Extraordinary expense (doesn't count toward average)
 - [ ] Line chart of balance across wallets (with average growth per month)
-- [ ] Mark expenses as recurrent
-- [ ] Line chart of recurrent bills going up and down (e.g. to track electricity consumption and water usage)
+- [ ] Mark expenses as recurring
+- [ ] Line chart of recurring bills going up and down (e.g. to track electricity consumption and water usage)
+- [ ] Semi-automate the registration of a recurring expense
 - [ ] Log out user when failing to get their data from database
 
 ## Technologies
