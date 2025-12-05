@@ -17,6 +17,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { PencilLine, Trash } from "lucide-react";
+import { currency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 
@@ -100,7 +101,7 @@ export function ExpensesTable() {
           {expenses.map((expense, index) => (
             <TableRow key={expense.id} rowIndex={index} actions={actions}>
               <TableCell>{expense.title}</TableCell>
-              <TableCell>{expense.value}</TableCell>
+              <TableCell>{currency(parseFloat(expense.value))}</TableCell>
               <TableCell>{expense.source}</TableCell>
               <TableCell>{expense.categoryName || "No category"}</TableCell>
               <TableCell>{expense.bucketName || "No bucket"}</TableCell>

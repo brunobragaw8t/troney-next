@@ -19,6 +19,7 @@ import {
 import { PencilLine, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
+import { currency } from "@/lib/utils";
 
 export function BucketsTable() {
   const router = useRouter();
@@ -113,7 +114,7 @@ export function BucketsTable() {
               {budgetTotal.toFixed(2)} %
             </TableHeader>
             <TableHeader className={!isBudgetTotal100 ? "text-red-400" : ""}>
-              {balanceTotal.toFixed(2)} €
+              {currency(balanceTotal)}
             </TableHeader>
             <TableCell></TableCell>
           </TableRow>
@@ -122,7 +123,7 @@ export function BucketsTable() {
             <TableRow key={bucket.id} rowIndex={index} actions={actions}>
               <TableHeader>{bucket.name}</TableHeader>
               <TableCell>{bucket.budget} %</TableCell>
-              <TableCell>{bucket.balance} €</TableCell>
+              <TableCell>{currency(parseFloat(bucket.balance))}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button

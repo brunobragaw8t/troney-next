@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn, currency } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowUpRight, PackageOpen, Wallet } from "lucide-react";
@@ -35,7 +35,7 @@ export function ControlPanelView() {
                 </p>
 
                 <p className="mb-1 bg-gradient-to-r from-primary-1 to-primary-2 bg-clip-text text-5xl font-bold text-transparent">
-                  {totalBalance.toFixed(2)} €
+                  {currency(totalBalance)}
                 </p>
 
                 <div className="flex items-center gap-2 text-sm text-primary-1">
@@ -79,7 +79,7 @@ export function ControlPanelView() {
                       </h3>
 
                       <p className="text-2xl font-bold text-primary-1">
-                        {balance.toFixed(2)} €
+                        {currency(balance)}
                       </p>
                     </div>
 
@@ -131,7 +131,7 @@ export function ControlPanelView() {
                   </div>
 
                   <p className="text-2xl font-bold text-primary-1">
-                    {balance.toFixed(2)} €
+                    {currency(balance)}
                   </p>
                 </div>
               );

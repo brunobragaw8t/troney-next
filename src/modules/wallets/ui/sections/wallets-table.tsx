@@ -17,6 +17,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { PencilLine, Trash } from "lucide-react";
+import { currency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 
@@ -98,14 +99,14 @@ export function WalletsTable() {
         <TableBody>
           <TableRow>
             <TableHeader>Total</TableHeader>
-            <TableHeader>{balanceTotal.toFixed(2)} €</TableHeader>
+            <TableHeader>{currency(balanceTotal)}</TableHeader>
             <TableCell></TableCell>
           </TableRow>
 
           {wallets.map((wallet, index) => (
             <TableRow key={wallet.id} rowIndex={index} actions={actions}>
               <TableHeader>{wallet.name}</TableHeader>
-              <TableCell>{wallet.balance}</TableCell>
+              <TableCell>{currency(parseFloat(wallet.balance))}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button

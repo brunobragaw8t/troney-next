@@ -43,8 +43,9 @@ and here's the [Storybook](https://troney-storybook.vercel.app/)
 - [x] Create earnings CRUD
 - [x] Prevent registering earnings if buckets aren't 100%
 - [x] Create expenses CRUD
-- [ ] Create movements CRUD
-- [ ] Format currency consistently
+- [x] Create movements CRUD
+- [x] Format currency consistently
+- [ ] Paginate data tables
 - [ ] Add autocomplete of previously registered expenses, with price
 - [ ] View history of prices
 - [ ] Keyboard navigation in lists

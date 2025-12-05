@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button/button";
+import { currency } from "@/lib/utils";
 import { Keymap } from "@/components/ui/keymap/keymap";
 import { ConfirmationModal } from "@/components/ui/confirmation-modal/confirmation-modal";
 import {
@@ -105,7 +106,7 @@ export function MovementsTable() {
             <TableRow key={movement.id} rowIndex={index} actions={actions}>
               <TableCell>{movement.date}</TableCell>
               <TableCell>{movement.sourceWalletName || "Unknown"}</TableCell>
-              <TableCell>{movement.value}</TableCell>
+              <TableCell>{currency(parseFloat(movement.value))}</TableCell>
               <TableCell>{movement.targetWalletName || "Unknown"}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">

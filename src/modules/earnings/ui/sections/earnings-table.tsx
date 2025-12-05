@@ -17,6 +17,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { PencilLine, Trash } from "lucide-react";
+import { currency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 
@@ -98,7 +99,7 @@ export function EarningsTable() {
           {earnings.map((earning, index) => (
             <TableRow key={earning.id} rowIndex={index} actions={actions}>
               <TableCell>{earning.title}</TableCell>
-              <TableCell>{earning.value}</TableCell>
+              <TableCell>{currency(parseFloat(earning.value))}</TableCell>
               <TableCell>{earning.source}</TableCell>
               <TableCell>{earning.walletName || "No wallet"}</TableCell>
               <TableCell>{earning.date}</TableCell>
