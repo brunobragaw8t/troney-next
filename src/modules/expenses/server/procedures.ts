@@ -74,7 +74,7 @@ export const expensesRouter = createTRPCRouter({
           .trim(),
         value: z
           .number()
-          .min(0.01, "Value must be greater than 0")
+          .min(-999999.99, "Value must be greater than -1,000,000")
           .max(999999.99, "Value must be less than 1,000,000"),
         source: z
           .string()
@@ -191,7 +191,7 @@ export const expensesRouter = createTRPCRouter({
           .trim(),
         value: z
           .number()
-          .min(0.01, "Value must be greater than 0")
+          .min(-999999.99, "Value must be greater than -1,000,000")
           .max(999999.99, "Value must be less than 1,000,000"),
         source: z
           .string()
