@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { movements, wallets } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, InferSelectModel } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import z from "zod";
 
@@ -57,8 +57,14 @@ export const movementsRouter = createTRPCRouter({
   createMovement: protectedProcedure
     .input(
       z.object({
-        walletIdSource: z.string().uuid("Please select the source wallet"),
-        walletIdTarget: z.string().uuid("Please select the target wallet"),
+        walletIdSource: z
+          .string()
+          .uuid("Please select the source wallet")
+          .nullable(),
+        walletIdTarget: z
+          .string()
+          .uuid("Please select the target wallet")
+          .nullable(),
         value: z
           .number()
           .min(0.01, "Value must be greater than 0")
@@ -75,38 +81,50 @@ export const movementsRouter = createTRPCRouter({
       }
 
       return await db.transaction(async (tx) => {
-        const [sourceWallet] = await tx
-          .select()
-          .from(wallets)
-          .where(
-            and(
-              eq(wallets.id, input.walletIdSource),
-              eq(wallets.userId, ctx.session.userId),
-            ),
-          );
+        let sourceWallet: InferSelectModel<typeof wallets> | null = null;
 
-        if (!sourceWallet) {
-          throw new TRPCError({
-            message: `Source wallet ${input.walletIdSource} not found`,
-            code: "NOT_FOUND",
-          });
+        if (input.walletIdSource !== null) {
+          const [res] = await tx
+            .select()
+            .from(wallets)
+            .where(
+              and(
+                eq(wallets.id, input.walletIdSource),
+                eq(wallets.userId, ctx.session.userId),
+              ),
+            );
+
+          if (!res) {
+            throw new TRPCError({
+              message: `Source wallet ${input.walletIdSource} not found`,
+              code: "NOT_FOUND",
+            });
+          }
+
+          sourceWallet = res;
         }
 
-        const [targetWallet] = await tx
-          .select()
-          .from(wallets)
-          .where(
-            and(
-              eq(wallets.id, input.walletIdTarget),
-              eq(wallets.userId, ctx.session.userId),
-            ),
-          );
+        let targetWallet: InferSelectModel<typeof wallets> | null = null;
 
-        if (!targetWallet) {
-          throw new TRPCError({
-            message: `Target wallet ${input.walletIdTarget} not found`,
-            code: "NOT_FOUND",
-          });
+        if (input.walletIdTarget !== null) {
+          const [res] = await tx
+            .select()
+            .from(wallets)
+            .where(
+              and(
+                eq(wallets.id, input.walletIdTarget),
+                eq(wallets.userId, ctx.session.userId),
+              ),
+            );
+
+          if (!res) {
+            throw new TRPCError({
+              message: `Target wallet ${input.walletIdTarget} not found`,
+              code: "NOT_FOUND",
+            });
+          }
+
+          targetWallet = res;
         }
 
         const [movement] = await tx
@@ -120,19 +138,25 @@ export const movementsRouter = createTRPCRouter({
           })
           .returning();
 
-        const newSourceBalance = parseFloat(sourceWallet.balance) - input.value;
+        if (sourceWallet !== null) {
+          const newSourceBalance =
+            parseFloat(sourceWallet.balance) - input.value;
 
-        await tx
-          .update(wallets)
-          .set({ balance: newSourceBalance.toString() })
-          .where(eq(wallets.id, input.walletIdSource));
+          await tx
+            .update(wallets)
+            .set({ balance: newSourceBalance.toString() })
+            .where(eq(wallets.id, sourceWallet.id));
+        }
 
-        const newTargetBalance = parseFloat(targetWallet.balance) + input.value;
+        if (targetWallet !== null) {
+          const newTargetBalance =
+            parseFloat(targetWallet.balance) + input.value;
 
-        await tx
-          .update(wallets)
-          .set({ balance: newTargetBalance.toString() })
-          .where(eq(wallets.id, input.walletIdTarget));
+          await tx
+            .update(wallets)
+            .set({ balance: newTargetBalance.toString() })
+            .where(eq(wallets.id, targetWallet.id));
+        }
 
         return movement;
       });

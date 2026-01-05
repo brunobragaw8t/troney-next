@@ -108,8 +108,8 @@ export function CreateMovementForm() {
     });
 
     createMovementMutation.mutate({
-      walletIdSource,
-      walletIdTarget,
+      walletIdSource: walletIdSource || null,
+      walletIdTarget: walletIdTarget || null,
       value: parseFloat(value),
       date: new Date(date),
     });
