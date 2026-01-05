@@ -30,7 +30,7 @@ export const expensesRouter = createTRPCRouter({
       .leftJoin(buckets, eq(expenses.bucketId, buckets.id))
       .leftJoin(categories, eq(expenses.categoryId, categories.id))
       .where(eq(expenses.userId, ctx.session.userId))
-      .orderBy(desc(expenses.date));
+      .orderBy(desc(expenses.date), desc(expenses.createdAt));
   }),
 
   getExpense: protectedProcedure
